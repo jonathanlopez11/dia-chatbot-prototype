@@ -1,0 +1,157 @@
+{
+  "projects": [
+    {
+      "id": "project1",
+      "name": "Marketing Campaign Q1 2025",
+      "shortDescription": "Digital marketing campaign focused on brand awareness and lead generation across multiple channels.",
+      "lead": {
+        "name": "Sarah Miller",
+        "initials": "SM",
+        "role": "Project Lead",
+        "email": "sarah.miller@company.com",
+        "bio": "Sarah has 10 years of experience in digital marketing and has led campaigns that generated over $50M in revenue. She specializes in multi-channel strategies and data-driven decision making."
+      },
+      "overview": "This project focuses on launching our Q1 marketing campaign across digital channels. The campaign aims to increase brand awareness by 30% and drive qualified leads to our sales team.",
+      "team": [
+        {
+          "name": "Sarah Miller",
+          "initials": "SM",
+          "role": "Project Lead"
+        },
+        {
+          "name": "John Davis",
+          "initials": "JD",
+          "role": "Content Strategist"
+        },
+        {
+          "name": "Emily Kim",
+          "initials": "EK",
+          "role": "Design Lead"
+        },
+        {
+          "name": "Michael Rodriguez",
+          "initials": "MR",
+          "role": "Analytics"
+        }
+      ],
+      "goals": [
+        "Launch social media campaign by Jan 15",
+        "Create 20 blog posts and video content",
+        "Achieve 30% increase in brand awareness",
+        "Generate 500+ qualified leads"
+      ],
+      "documents": [
+        {
+          "id": "doc1",
+          "name": "Apps Espresso Weekly",
+          "summary": "Weekly tracking document for project and task progress for the Apps work stream",
+          "url": "https://www.notion.so/browserinc/Apps-Espresso-Weekly-29961250367680199b5cc2f780ffd176",
+          "updated": "2 days ago"
+        },
+        {
+          "id": "doc2",
+          "name": "Linear Board - Apps Pod",
+          "summary": "Linear board to keep track of task progress for the Apps pod",
+          "url": "https://linear.app/the-browser-company/team/APS/active",
+          "updated": "yesterday"
+        },
+        {
+          "id": "doc3",
+          "name": "Apps Espresso Planning",
+          "summary": "Doc outlining Dia's Apps Espresso plan to make meetings best-in-class via Google Meet integrations and proactive suggestions, with goals, metrics, teams, risks, and dependencies.",
+          "url": "https://www.notion.so/browserinc/Apps-Espresso-Planning-2846125036768032aee2dbf910448d83",
+          "updated": "1 week ago"
+        },
+        {
+          "id": "doc4",
+          "name": "Apps Espresso Kickoff",
+          "summary": "Kickoff doc outlining Dia's Apps Espresso milestone to make meetings and proactive suggestions best‑in‑class, with teams, goals, success metrics, and initial projects.",
+          "url": "https://www.notion.so/browserinc/Apps-Espresso-Kickoff-28c61250367680f0b859e167f1192eb6",
+          "updated": "3 days ago"
+        },
+        {
+          "id": "doc5",
+          "name": "Espresso Product Strategy",
+          "summary": "Product strategy document outlining Dia's Espresso milestone P0/P1 goals across Browser, Chat, Apps, and Enterprise to drive toward one million weekly active users, plus team discussions and open questions on prioritization, metrics, and differentiation.",
+          "url": "https://www.notion.so/browserinc/Espresso-Product-Strategy-Context-284612503676800c8c6cf58013f2665b",
+          "updated": "5 days ago"
+        }
+      ],
+      "context": "PROJECT CONTEXT:\nProject: Marketing Campaign Q1 2025\nLead: Sarah Miller (Project Lead, 10 years experience in digital marketing)\n\nOVERVIEW:\nThis is a comprehensive Q1 marketing campaign focused on increasing brand awareness by 30% and generating 500+ qualified leads. The campaign will run across multiple digital channels including social media, content marketing, paid ads, and email marketing.\n\nKEY OBJECTIVES:\n- Launch social media campaign by January 15th\n- Create 20 pieces of high-quality blog posts and video content\n- Achieve 30% increase in brand awareness metrics\n- Generate 500+ qualified marketing leads\n- Stay within $250K budget allocation\n\nTEAM MEMBERS:\n- Sarah Miller: Project Lead and campaign strategist\n- John Davis: Content Strategist responsible for all written and video content\n- Emily Kim: Design Lead managing all visual assets and brand consistency\n- Michael Rodriguez: Analytics lead tracking performance and ROI\n\nKEY DOCUMENTS (you can fetch these URLs to read their contents):\n1. Apps Espresso Weekly: https://www.notion.so/browserinc/Apps-Espresso-Weekly-29961250367680199b5cc2f780ffd176\n   Weekly tracking document for project and task progress for the Apps work stream\n\n2. Linear Board - Apps Pod: https://linear.app/the-browser-company/team/APS/active\n   Linear board to keep track of task progress for the Apps pod\n\n3. Apps Espresso Planning: https://www.notion.so/browserinc/Apps-Espresso-Planning-2846125036768032aee2dbf910448d83\n   Doc outlining Dia's Apps Espresso plan to make meetings best-in-class via Google Meet integrations and proactive suggestions, with goals, metrics, teams, risks, and dependencies.\n\n4. Apps Espresso Kickoff: https://www.notion.so/browserinc/Apps-Espresso-Kickoff-28c61250367680f0b859e167f1192eb6\n   Kickoff doc outlining Dia's Apps Espresso milestone to make meetings and proactive suggestions best‑in‑class, with teams, goals, success metrics, and initial projects.\n\n5. Espresso Product Strategy: https://www.notion.so/browserinc/Espresso-Product-Strategy-Context-284612503676800c8c6cf58013f2665b\n   Product strategy document outlining Dia's Espresso milestone P0/P1 goals across Browser, Chat, Apps, and Enterprise to drive toward one million weekly active users, plus team discussions and open questions on prioritization, metrics, and differentiation.\n\nCURRENT STATUS:\nProject is in planning phase. Team has completed strategy and is now building out content calendar and creative assets. Campaign launches January 15th."
+    },
+    {
+      "id": "project2",
+      "name": "Product Redesign Initiative",
+      "shortDescription": "Complete UX/UI overhaul of flagship product to improve user experience and reduce onboarding time.",
+      "lead": {
+        "name": "Alex Chen",
+        "initials": "AC",
+        "role": "Product Manager",
+        "email": "alex.chen@company.com",
+        "bio": "Alex is a senior product manager with 8 years of experience in SaaS products. Previously led product at two successful startups and has a track record of improving user engagement by 40%+ through thoughtful redesigns."
+      },
+      "overview": "This initiative aims to completely redesign our flagship product's user interface and experience. The goal is to reduce time-to-value for new users, improve daily active usage, and modernize the visual design to match current industry standards.",
+      "team": [
+        {
+          "name": "Alex Chen",
+          "initials": "AC",
+          "role": "Product Manager"
+        },
+        {
+          "name": "Lisa Park",
+          "initials": "LP",
+          "role": "UX Designer"
+        },
+        {
+          "name": "David Kumar",
+          "initials": "DK",
+          "role": "UI Designer"
+        },
+        {
+          "name": "Rachel Thompson",
+          "initials": "RT",
+          "role": "User Researcher"
+        },
+        {
+          "name": "Tom Zhang",
+          "initials": "TZ",
+          "role": "Engineering Lead"
+        }
+      ],
+      "goals": [
+        "Reduce onboarding time from 45min to 15min",
+        "Increase DAU by 25%",
+        "Achieve 4.5+ star rating in app stores",
+        "Complete redesign by end of Q2",
+        "Zero critical bugs in production"
+      ],
+      "documents": [
+        {
+          "id": "doc5",
+          "name": "User Research Findings.pdf",
+          "summary": "Research report from 50+ user interviews identifying key pain points: complex navigation, unclear feature discovery, and slow task completion times.",
+          "updated": "1 week ago"
+        },
+        {
+          "id": "doc6",
+          "name": "Design System.figma",
+          "summary": "Comprehensive design system with new components, color palette, typography, and interaction patterns. Includes light and dark mode support.",
+          "updated": "3 days ago"
+        },
+        {
+          "id": "doc7",
+          "name": "Technical Architecture.pdf",
+          "summary": "Technical plan for implementing the redesign including component migration strategy, API changes, and rollout plan with feature flags.",
+          "updated": "5 days ago"
+        },
+        {
+          "id": "doc8",
+          "name": "Success Metrics Dashboard.xlsx",
+          "summary": "Tracking dashboard for key metrics including onboarding completion rate, time-to-first-value, daily active users, and feature adoption rates.",
+          "updated": "2 days ago"
+        }
+      ],
+      "context": "PROJECT CONTEXT:\nProject: Product Redesign Initiative\nLead: Alex Chen (Product Manager, 8 years experience in SaaS)\n\nOVERVIEW:\nThis is a comprehensive redesign of our flagship product aimed at dramatically improving user experience and engagement. Current product has usability issues that are causing high churn and low feature adoption. The redesign will modernize the UI, streamline workflows, and reduce complexity.\n\nKEY OBJECTIVES:\n- Reduce new user onboarding time from 45 minutes to 15 minutes\n- Increase daily active users (DAU) by 25%\n- Achieve 4.5+ star rating in app stores (currently 3.8)\n- Complete full rollout by end of Q2 2025\n- Launch with zero critical bugs\n\nTEAM MEMBERS:\n- Alex Chen: Product Manager defining requirements and roadmap\n- Lisa Park: UX Designer leading user flows and information architecture\n- David Kumar: UI Designer creating visual design and design system\n- Rachel Thompson: User Researcher conducting studies and usability testing\n- Tom Zhang: Engineering Lead managing technical implementation\n\nKEY DOCUMENTS:\n1. User Research Findings (doc5): 50+ interviews revealed major pain points - users struggle with navigation (68% report confusion), feature discovery is poor (users only find 30% of available features), and tasks take 2-3x longer than competitors. Key insight: users want simpler workflows with better guidance.\n\n2. Design System (doc6): New modern design with cleaner aesthetics. Reduced color palette to 3 primary colors (purple, white, gray). Larger touch targets, improved contrast ratios for accessibility. Consistent spacing system. All components built in Figma with dark mode support.\n\n3. Technical Architecture (doc7): Phased rollout approach using feature flags. Backend API will remain mostly unchanged. Frontend rebuild using React 18 with improved performance. Component library migration will happen module-by-module to reduce risk. Target: 50% performance improvement in page load times.\n\n4. Success Metrics (doc8): Tracking onboarding completion (target: 85%), time-to-first-value (target: <15min), DAU (target: 25% increase), feature adoption (target: users using 50% of features), NPS score (target: 40+).\n\nCURRENT STATUS:\nDesign phase 80% complete. User testing of prototypes showing positive results (15% faster task completion). Engineering team starting implementation next week. Expected beta launch in March 2025."
+    }
+  ]
+}
