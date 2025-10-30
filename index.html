@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dia Chat - Sonnet 4.5</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f7f7f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: white;
+            border-right: 1px solid #e5e5e0;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .sidebar-header {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin-bottom: 4px;
+        }
+
+        .project-name {
+            font-size: 14px;
+            color: #8b5cf6;
+            font-weight: 500;
+        }
+
+        .sidebar-section {
+            margin-bottom: 28px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6e6b68;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-content {
+            font-size: 14px;
+            color: #2d2d2d;
+            line-height: 1.6;
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .team-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .team-info {
+            flex: 1;
+        }
+
+        .team-name {
+            font-weight: 500;
+            color: #2d2d2d;
+            font-size: 14px;
+        }
+
+        .team-role {
+            font-size: 12px;
+            color: #6e6b68;
+        }
+
+        .goal-item {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #2d2d2d;
+        }
+
+        .goal-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #8b5cf6;
+            border-radius: 3px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .document-item {
+            padding: 10px;
+            background: #f7f7f5;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .document-item:hover {
+            background: #f0ece8;
+        }
+
+        .document-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2d2d2d;
+            margin-bottom: 2px;
+        }
+
+        .document-meta {
+            font-size: 12px;
+            color: #6e6b68;
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: white;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e5e5e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dia-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 18px;
+        }
+
+        .header h1 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2d2d2d;
+        }
+
+        .model-badge {
+            background: #f0ece8;
+            color: #6e6b68;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .new-chat-btn {
+            padding: 8px 16px;
+            background: #2d2d2d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .new-chat-btn:hover {
+            background: #1a1a1a;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .message {
+            display: flex;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.assistant {
+            justify-content: flex-start;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-content {
+            max-width: 70%;
+        }
+
+        .message-text {
+            color: #2d2d2d;
+            line-height: 1.6;
+            font-size: 15px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            padding: 12px 16px;
+            border-radius: 12px;
+        }
+
+        .message.user .message-text {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .message.assistant .message-text {
+            background: #f0f0f0;
+            color: #2d2d2d;
+        }
+
+        .message.system {
+            justify-content: center;
+        }
+
+        .message.system .message-text {
+            background: #f0ece8;
+            color: #6e6b68;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .input-container {
+            background: white;
+            border-top: 1px solid #e5e5e0;
+            padding: 16px 24px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            background: #f7f7f5;
+            border: 1px solid #e5e5e0;
+            border-radius: 8px;
+            padding: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #8b5cf6;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            color: #2d2d2d;
+            outline: none;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #9b9b98;
+        }
+
+        .send-btn {
+            padding: 8px 20px;
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: #7c3aed;
+        }
+
+        .send-btn:disabled {
+            background: #c9c9c5;
+            cursor: not-allowed;
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6e6b68;
+        }
+
+        .welcome-message h2 {
+            font-size: 24px;
+            color: #2d2d2d;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .welcome-message p {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="dia-logo">D</div>
+            <h1>Dia Chat</h1>
+            <span class="model-badge">Sonnet 4.5</span>
+        </div>
+        <button class="new-chat-btn" onclick="newChat()">New Chat</button>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Project Info</h2>
+                <div class="project-name">Marketing Campaign Q1 2025</div>
+            </div>
+
+            <!-- Overview Section -->
+            <div class="sidebar-section">
+                <h3>Overview</h3>
+                <div class="sidebar-content">
+                    This project focuses on launching our Q1 marketing campaign across digital channels. The campaign aims to increase brand awareness by 30% and drive qualified leads to our sales team.
+                </div>
+            </div>
+
+            <!-- Team Section -->
+            <div class="sidebar-section">
+                <h3>Team</h3>
+                <div class="team-member">
+                    <div class="team-avatar">SM</div>
+                    <div class="team-info">
+                        <div class="team-name">Sarah Miller</div>
+                        <div class="team-role">Project Lead</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">JD</div>
+                    <div class="team-info">
+                        <div class="team-name">John Davis</div>
+                        <div class="team-role">Content Strategist</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">EK</div>
+                    <div class="team-info">
+                        <div class="team-name">Emily Kim</div>
+                        <div class="team-role">Design Lead</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">MR</div>
+                    <div class="team-info">
+                        <div class="team-name">Michael Rodriguez</div>
+                        <div class="team-role">Analytics</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goals Section -->
+            <div class="sidebar-section">
+                <h3>Goals</h3>
+                <div class="goal-item">
+                    <div class="goal-checkbox"></div>
+                    <div>Launch social media campaign by Jan 15</div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-checkbox"></div>
+                    <div>Create 20 blog posts and video content</div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-checkbox"></div>
+                    <div>Achieve 30% increase in brand awareness</div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-checkbox"></div>
+                    <div>Generate 500+ qualified leads</div>
+                </div>
+            </div>
+
+            <!-- Top Documents Section -->
+            <div class="sidebar-section">
+                <h3>Top Documents</h3>
+                <div class="document-item">
+                    <div class="document-name">Campaign Strategy.pdf</div>
+                    <div class="document-meta">Updated 2 days ago</div>
+                </div>
+                <div class="document-item">
+                    <div class="document-name">Content Calendar.xlsx</div>
+                    <div class="document-meta">Updated yesterday</div>
+                </div>
+                <div class="document-item">
+                    <div class="document-name">Brand Guidelines.pdf</div>
+                    <div class="document-meta">Updated 1 week ago</div>
+                </div>
+                <div class="document-item">
+                    <div class="document-name">Q1 Budget.xlsx</div>
+                    <div class="document-meta">Updated 3 days ago</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div id="chatContainer" class="chat-container">
+                <div class="welcome-message">
+                    <h2>Chat with Dia</h2>
+                    <p>Dia Sonnet 4.5 is ready to help. Type your message below to get started.</p>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <input
+                        type="text"
+                        id="userInput"
+                        placeholder="Message Dia..."
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button id="sendBtn" class="send-btn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isProcessing = false;
+        let conversationHistory = [];
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !isProcessing) {
+                sendMessage();
+            }
+        }
+
+        function addMessage(role, text) {
+            const chatContainer = document.getElementById('chatContainer');
+
+            // Remove welcome message if it exists
+            const welcomeMsg = chatContainer.querySelector('.welcome-message');
+            if (welcomeMsg) {
+                welcomeMsg.remove();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+
+            if (role === 'system') {
+                messageDiv.innerHTML = `<div class="message-text">${text}</div>`;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-text">${text}</div>
+                    </div>
+                `;
+            }
+
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function newChat() {
+            conversationHistory = [];
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.innerHTML = `
+                <div class="welcome-message">
+                    <h2>Chat with Dia</h2>
+                    <p>Dia Sonnet 4.5 is ready to help. Type your message below to get started.</p>
+                </div>
+            `;
+        }
+
+        async function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const message = userInput.value.trim();
+
+            if (!message || isProcessing) {
+                return;
+            }
+
+            // Add user message to chat
+            addMessage('user', message);
+            userInput.value = '';
+
+            // Add user message to conversation history
+            conversationHistory.push({
+                role: 'user',
+                content: message
+            });
+
+            // Disable input while processing
+            isProcessing = true;
+            document.getElementById('sendBtn').disabled = true;
+            document.getElementById('userInput').disabled = true;
+
+            try {
+                // Call API endpoint (works locally and on Vercel)
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-5-20250929',
+                        max_tokens: 4096,
+                        messages: conversationHistory
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || `API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Extract assistant response
+                const assistantMessage = data.content[0].text;
+
+                // Add assistant message to conversation history
+                conversationHistory.push({
+                    role: 'assistant',
+                    content: assistantMessage
+                });
+
+                // Add assistant response to chat
+                addMessage('assistant', assistantMessage);
+
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('system', `Error: ${error.message}`);
+            } finally {
+                // Re-enable input
+                isProcessing = false;
+                document.getElementById('sendBtn').disabled = false;
+                document.getElementById('userInput').disabled = false;
+                document.getElementById('userInput').focus();
+            }
+        }
+
+        // Focus on input when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('userInput').focus();
+        });
+    </script>
+</body>
+</html>
