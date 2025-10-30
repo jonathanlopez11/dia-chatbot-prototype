@@ -54,7 +54,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
             background: var(--background);
             color: var(--foreground);
             height: 100vh;
@@ -64,10 +64,10 @@
 
         /* Sidebar */
         .sidebar {
-            width: 400px;
+            width: 35%;
             background: var(--sidebar);
             color: var(--sidebar-foreground);
-            padding: 32px 24px;
+            padding: 8px 32px 48px 32px;
             overflow-y: auto;
             border-right: 1px solid var(--sidebar-border);
         }
@@ -75,7 +75,7 @@
         .sidebar-header {
             display: flex;
             gap: 8px;
-            margin-bottom: 32px;
+            margin-bottom: 12px;
         }
 
         .icon-btn {
@@ -83,7 +83,7 @@
             height: 36px;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            background: var(--sidebar);
+            background: var(--background);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -93,38 +93,40 @@
         }
 
         .icon-btn:hover {
-            background: var(--sidebar-accent);
-            border-color: var(--border);
+            background: var(--accent);
+            color: var(--foreground);
         }
 
         .project-label {
-            font-size: 13px;
+            font-size: 16px;
             color: var(--muted-foreground);
             margin-bottom: 8px;
-            font-weight: var(--font-weight-medium);
+            font-weight: var(--font-weight-normal);
         }
 
         .project-title {
-            font-size: 32px;
-            font-weight: 600;
+            font-size: 36px;
+            font-weight: 500;
             color: var(--sidebar-foreground);
-            margin-bottom: 40px;
+            margin-bottom: 48px;
             line-height: 1.2;
         }
 
         .section {
-            margin-bottom: 40px;
+            margin-bottom: 48px;
         }
 
         .section-title {
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 500;
             color: var(--sidebar-foreground);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            padding: 0 4px;
         }
 
         .documents-container {
-            background: var(--sidebar-accent);
+            background: #f9fafb;
+            border: 1px solid #f3f4f6;
             border-radius: var(--radius);
             padding: 16px;
         }
@@ -132,54 +134,83 @@
         .document-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 10px 0;
-            color: var(--sidebar-accent-foreground);
-            font-size: 14px;
+            gap: 8px;
+            padding: 0;
+            color: #6b7280;
+            font-size: 12px;
+            cursor: pointer;
+            transition: color 0.2s;
+            margin-bottom: 8px;
         }
 
-        .document-item:not(:last-child) {
-            border-bottom: 1px solid var(--sidebar-border);
+        .document-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .document-item:hover {
+            color: var(--foreground);
         }
 
         .document-icon {
-            width: 16px;
-            height: 16px;
-            opacity: 0.6;
+            width: 14px;
+            height: 14px;
+            color: var(--muted-foreground);
+            flex-shrink: 0;
         }
 
-        .section-with-icon {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
+        .section-content {
+            width: 100%;
         }
 
-        .section-icon {
-            width: 20px;
-            height: 20px;
-            opacity: 0.5;
-            margin-top: 4px;
-        }
-
-        .description-text {
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--sidebar-accent-foreground);
-        }
-
-        .team-member {
+        .section-content-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--sidebar-foreground);
             margin-bottom: 12px;
         }
 
-        .team-member-name {
-            color: var(--sidebar-primary);
-            font-weight: var(--font-weight-medium);
-            font-size: 14px;
+        .description-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--muted-foreground);
         }
 
-        .team-member-role {
+        .team-list {
             color: var(--muted-foreground);
-            font-size: 14px;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .team-list p {
+            margin: 0;
+        }
+
+        .team-role {
+            color: #9ca3af;
+        }
+
+        .deliverables-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .deliverable-item {
+            margin: 0;
+            padding-left: 4px;
+        }
+
+        .deliverable-item.completed {
+            color: #10b981;
+        }
+
+        .deliverable-item.in-progress {
+            color: var(--muted-foreground);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .deliverable-item.pending {
+            color: #9ca3af;
         }
 
         /* Chat Area */
@@ -187,121 +218,239 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: var(--background);
+            background: #ffffff;
+            overflow: hidden;
         }
 
         .chat-header {
-            padding: 24px 32px;
-            border-bottom: 1px solid var(--border);
+            padding: 48px 48px 32px 48px;
+            flex-shrink: 0;
         }
 
         .chat-subtitle {
             font-size: 13px;
             color: var(--muted-foreground);
-            margin-bottom: 4px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .sparkle-icon {
-            font-size: 14px;
+            width: 16px;
+            height: 16px;
+            color: var(--muted-foreground);
         }
 
         .chat-title {
             font-size: 36px;
-            font-weight: 600;
+            font-weight: 500;
             color: var(--foreground);
         }
 
         .chat-content {
             flex: 1;
-            padding: 40px 32px;
+            padding: 0 48px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 24px;
+            padding-bottom: 24px;
+        }
+
+        .message-wrapper {
+            display: flex;
+            gap: 16px;
+        }
+
+        .message-wrapper.user {
+            justify-content: flex-end;
+        }
+
+        .message-wrapper.assistant {
+            justify-content: flex-start;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message-avatar svg {
+            width: 20px;
+            height: 20px;
+            color: #6b7280;
+        }
+
+        .message-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 70%;
+        }
+
+        .thinking-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .thinking-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .thinking-step-icon {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .thinking-step-icon svg {
+            width: 8px;
+            height: 8px;
+            color: white;
+            stroke-width: 3;
+        }
+
+        .thinking-step-text {
+            font-size: 14px;
+            color: #6b7280;
         }
 
         .message-bubble {
-            background: var(--accent);
+            padding: 12px 20px;
             border-radius: 16px;
-            padding: 20px 24px;
-            max-width: 700px;
-            display: flex;
-            gap: 16px;
-            align-items: flex-start;
+            font-size: 15px;
+            line-height: 1.6;
         }
 
-        .message-icon {
-            font-size: 18px;
+        .message-bubble.user {
+            background: #f3f4f6;
+            color: var(--foreground);
+            border: 1px solid #e5e7eb;
+        }
+
+        .message-bubble.assistant {
+            color: #374151;
+        }
+
+        .message-sources {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             margin-top: 2px;
         }
 
-        .message-text {
-            font-size: 15px;
-            line-height: 1.6;
-            color: var(--accent-foreground);
+        .sources-label {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .sources-list {
+            display: flex;
+            gap: 6px;
+        }
+
+        .source-badge {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #f9fafb;
+            border: 1px solid #f3f4f6;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .source-badge:hover {
+            background: #f3f4f6;
+        }
+
+        .source-badge svg {
+            width: 12px;
+            height: 12px;
+            color: #6b7280;
+        }
+
+        .source-badge-text {
+            font-size: 12px;
+            color: #6b7280;
         }
 
         .suggestions-section {
-            margin-top: auto;
-            padding: 0 32px 24px;
+            padding: 24px 48px 48px 48px;
+            flex-shrink: 0;
+            background: #ffffff;
         }
 
         .suggestions-label {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--muted-foreground);
-            margin-bottom: 12px;
+            margin-bottom: 8px;
+            padding: 0 4px;
         }
 
         .suggestions-list {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
+            align-items: flex-start;
         }
 
         .suggestion-btn {
             background: var(--background);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px 18px;
+            border: 1px solid #e5e7eb;
+            border-radius: 24px;
+            padding: 8px 16px;
             text-align: left;
             cursor: pointer;
             font-size: 14px;
-            color: var(--foreground);
+            color: #374151;
             transition: all 0.2s;
             font-family: inherit;
-            width: 100%;
         }
 
         .suggestion-btn:hover {
-            background: var(--accent);
-            border-color: var(--border);
+            background: #f9fafb;
+            border-color: #d1d5db;
         }
 
         .input-container {
             display: flex;
             gap: 12px;
             align-items: center;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 24px;
+            padding: 8px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
 
         .message-input {
             flex: 1;
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 14px 20px;
+            border: none;
+            outline: none;
+            padding: 4px 16px;
             font-size: 14px;
             font-family: inherit;
-            outline: none;
-            transition: all 0.2s;
-            background: var(--input-background);
+            background: transparent;
             color: var(--foreground);
-        }
-
-        .message-input:focus {
-            border-color: var(--ring);
         }
 
         .message-input::placeholder {
@@ -309,8 +458,8 @@
         }
 
         .send-btn {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: var(--primary);
             border: none;
@@ -320,17 +469,25 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
-            font-size: 18px;
+            flex-shrink: 0;
         }
 
         .send-btn:hover {
-            opacity: 0.9;
-            transform: scale(1.05);
+            background: #1f2937;
         }
 
         .send-btn:disabled {
-            opacity: 0.4;
+            opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .send-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -352,8 +509,8 @@
             </button>
         </div>
 
-        <div class="project-label">Project Overview</div>
-        <h1 class="project-title">Apps Suggestion Project</h1>
+        <h1 class="project-label">Project Overview</h1>
+        <h2 class="project-title">Apps Suggestion Project</h2>
 
         <div class="section">
             <div class="section-title">Top Documents</div>
@@ -392,32 +549,90 @@
         </div>
 
         <div class="section">
-            <div class="section-with-icon">
-                <svg class="section-icon" viewBox="0 0 20 20" fill="none">
-                    <path d="M3 3h14v14H3V3z" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M6 6h8M6 10h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-                <div>
-                    <div class="section-title">Description</div>
-                    <p class="description-text">This project aims to create an innovative solution for managing and analyzing project data. It includes various features such as real-time collaboration, advanced analytics, and seamless integration with existing tools. Our goal is to revolutionize how teams work together and make data-driven decisions in their daily workflows.</p>
+            <div class="section-content">
+                <div class="section-content-title">Description</div>
+                <p class="description-text">This project aims to create an innovative solution for managing and analyzing project data. It includes various features such as real-time collaboration, advanced analytics, and seamless integration with existing tools. Our goal is to revolutionize how teams work together and make data-driven decisions in their daily workflows.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="section-content-title">Team Members</div>
+                <div class="team-list">
+                    <p>Sarah Chen <span class="team-role">· Project Lead</span></p>
+                    <p>Michael Rodriguez <span class="team-role">· Developer</span></p>
+                    <p>Emily Watson <span class="team-role">· Designer</span></p>
+                    <p>James Kim <span class="team-role">· QA Engineer</span></p>
                 </div>
             </div>
         </div>
 
         <div class="section">
-            <div class="section-with-icon">
-                <svg class="section-icon" viewBox="0 0 20 20" fill="none">
-                    <circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/>
-                    <path d="M4 17c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.5"/>
-                </svg>
-                <div>
-                    <div class="section-title">Team Members</div>
-                    <div class="team-member">
-                        <div class="team-member-name">Sarah Chen <span class="team-member-role">· Project Lead</span></div>
-                    </div>
-                    <div class="team-member">
-                        <div class="team-member-name">Michael Rodriguez <span class="team-member-role">· Developer</span></div>
-                    </div>
+            <div class="section-content">
+                <div class="section-content-title">Timeline</div>
+                <div class="team-list">
+                    <p><strong>Start Date:</strong> January 15, 2025</p>
+                    <p><strong>Expected Completion:</strong> April 30, 2025</p>
+                    <p><strong>Current Phase:</strong> Development</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="section-content-title">Key Objectives</div>
+                <div class="team-list">
+                    <p>Improve workflow efficiency by 40%</p>
+                    <p>Reduce manual data entry time</p>
+                    <p>Enable cross-team collaboration</p>
+                    <p>Provide actionable insights through analytics</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="section-content-title">Technologies</div>
+                <div class="team-list">
+                    <p>React 18 with TypeScript</p>
+                    <p>Node.js Backend API</p>
+                    <p>PostgreSQL Database</p>
+                    <p>AWS Cloud Infrastructure</p>
+                    <p>Docker Containerization</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="section-content-title">Budget</div>
+                <div class="team-list">
+                    <p><strong>Total Budget:</strong> $450,000</p>
+                    <p><strong>Engineering:</strong> $280,000</p>
+                    <p><strong>Design:</strong> $85,000</p>
+                    <p><strong>Infrastructure:</strong> $50,000</p>
+                    <p><strong>Contingency:</strong> $35,000</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="section-content-title">Status Update</div>
+                <p class="description-text">We've completed the initial research phase and are now moving into the prototyping stage. The team has identified key user pain points and developed a comprehensive technical architecture. Development is progressing on schedule, with the first alpha version expected to be ready for internal testing by the end of next week. We're tracking well against our milestones and have received positive feedback from early stakeholder reviews.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="section-content-title">Deliverables</div>
+                <div class="team-list deliverables-list">
+                    <p class="deliverable-item completed">✓ Initial Research & Discovery</p>
+                    <p class="deliverable-item completed">✓ Technical Architecture</p>
+                    <p class="deliverable-item in-progress">→ Prototype Development</p>
+                    <p class="deliverable-item pending">Alpha Testing</p>
+                    <p class="deliverable-item pending">Beta Release</p>
+                    <p class="deliverable-item pending">Production Launch</p>
                 </div>
             </div>
         </div>
@@ -426,41 +641,295 @@
     <!-- Chat Area -->
     <div class="chat-area">
         <div class="chat-header">
-            <div class="chat-subtitle">
-                <span class="sparkle-icon">✨</span>
-                Chat with your Projects
-            </div>
-            <h1 class="chat-title">Ask me anything</h1>
+            <h1 class="chat-subtitle">
+                <svg class="sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 2L15 8.5L22 12L15 15.5L12 22L9 15.5L2 12L9 8.5L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Chat with your Projects</span>
+            </h1>
+            <h2 class="chat-title">Ask me anything</h2>
         </div>
 
-        <div class="chat-content">
-            <div class="message-bubble">
-                <span class="message-icon">✨</span>
-                <p class="message-text">Hello! I'm here to help you with your Awesome Project. Last time we talked, we brainstormed some ideas for Proactive Suggestions inside Dia. We can pick up where you left off, or you can ask me anything else about the project!</p>
+        <div class="chat-content" id="chatContent">
+            <!-- Initial assistant message -->
+            <div class="message-wrapper assistant">
+                <div class="message-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2L15 8.5L22 12L15 15.5L12 22L9 15.5L2 12L9 8.5L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="message-content-wrapper">
+                    <div class="message-bubble assistant">
+                        <p>Hello! I'm here to help you with your Awesome Project. Last time we talked, we brainstormed some ideas for Proactive Suggestions inside Dia. We can pick up where you left off, or you can ask me anything else about the project!</p>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="suggestions-section">
-            <div class="suggestions-label">Suggested questions</div>
-            <div class="suggestions-list">
-                <button class="suggestion-btn">Who's working on this project?</button>
-                <button class="suggestion-btn">What's the timeline for this feature?</button>
-                <button class="suggestion-btn">What were our key Proactive Suggestions ideas?</button>
+            <div id="suggestionsContainer">
+                <div class="suggestions-label">Suggested questions</div>
+                <div class="suggestions-list">
+                    <button class="suggestion-btn" onclick="handleSuggestionClick(this)">What were our key Proactive Suggestions ideas?</button>
+                    <button class="suggestion-btn" onclick="handleSuggestionClick(this)">What's the timeline for this feature?</button>
+                    <button class="suggestion-btn" onclick="handleSuggestionClick(this)">Who's working on this project?</button>
+                </div>
             </div>
 
             <div class="input-container">
                 <input
                     type="text"
                     class="message-input"
+                    id="messageInput"
                     placeholder="Type your message..."
+                    onkeypress="handleKeyPress(event)"
                 />
-                <button class="send-btn">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M18 2L9 11M18 2L12 18L9 11M18 2L2 8L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
             </div>
         </div>
     </div>
+
+    <script>
+        let hasUserSentMessage = false;
+
+        const THINKING_STEPS = [
+            "Thinking...",
+            "Searching your project",
+            "Opening relevant documents",
+            "Pulling in relevant context",
+            "Searching the web",
+            "Doing additional research",
+            "Pulling it all together",
+        ];
+
+        function getRandomSteps() {
+            const numSteps = Math.floor(Math.random() * 3) + 3; // 3-5 steps
+            const shuffled = [...THINKING_STEPS].sort(() => Math.random() - 0.5);
+
+            const selectedSteps = ["Thinking..."];
+            const middleSteps = shuffled
+                .filter(s => s !== "Thinking..." && s !== "Pulling it all together")
+                .slice(0, numSteps - 2);
+            selectedSteps.push(...middleSteps);
+            selectedSteps.push("Pulling it all together");
+
+            return selectedSteps;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function handleSuggestionClick(button) {
+            const question = button.textContent;
+            document.getElementById('messageInput').value = question;
+            sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Hide suggestions after first message
+            if (!hasUserSentMessage) {
+                hasUserSentMessage = true;
+                document.getElementById('suggestionsContainer').style.display = 'none';
+            }
+
+            // Add user message
+            addUserMessage(message);
+            input.value = '';
+
+            // Show thinking steps and get response
+            const steps = getRandomSteps();
+            await showThinkingSteps(steps, message);
+        }
+
+        function addUserMessage(text) {
+            const chatContent = document.getElementById('chatContent');
+            const messageHtml = `
+                <div class="message-wrapper user">
+                    <div class="message-content-wrapper">
+                        <div class="message-bubble user">
+                            <p>${escapeHtml(text)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatContent.insertAdjacentHTML('beforeend', messageHtml);
+            scrollToBottom();
+        }
+
+        async function showThinkingSteps(steps, userInput) {
+            const chatContent = document.getElementById('chatContent');
+
+            // Create thinking wrapper
+            const thinkingWrapper = document.createElement('div');
+            thinkingWrapper.className = 'message-wrapper assistant';
+            thinkingWrapper.id = 'thinkingWrapper';
+            thinkingWrapper.innerHTML = `
+                <div class="message-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2L15 8.5L22 12L15 15.5L12 22L9 15.5L2 12L9 8.5L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="message-content-wrapper">
+                    <div class="thinking-steps" id="thinkingSteps"></div>
+                </div>
+            `;
+            chatContent.appendChild(thinkingWrapper);
+
+            const thinkingStepsContainer = document.getElementById('thinkingSteps');
+
+            // Animate steps
+            for (let i = 0; i < steps.length; i++) {
+                const stepHtml = `
+                    <div class="thinking-step" id="step-${i}">
+                        <div class="thinking-step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <span class="thinking-step-text">${steps[i]}</span>
+                    </div>
+                `;
+                thinkingStepsContainer.insertAdjacentHTML('beforeend', stepHtml);
+                scrollToBottom();
+                await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 400));
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // Remove thinking wrapper
+            thinkingWrapper.remove();
+
+            // Add assistant response
+            addAssistantMessage(generateResponse(userInput), steps);
+        }
+
+        function addAssistantMessage(text, thinkingSteps) {
+            const chatContent = document.getElementById('chatContent');
+
+            // Build thinking steps HTML
+            const stepsHtml = thinkingSteps.map(step => `
+                <div class="thinking-step">
+                    <div class="thinking-step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <span class="thinking-step-text">${step}</span>
+                </div>
+            `).join('');
+
+            // Determine sources based on steps
+            const sources = getSources(thinkingSteps);
+            const sourcesHtml = sources.map(source => `
+                <div class="source-badge">
+                    ${source.icon}
+                    <span class="source-badge-text">${source.label} (${source.count})</span>
+                </div>
+            `).join('');
+
+            const messageHtml = `
+                <div class="message-wrapper assistant">
+                    <div class="message-avatar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M12 2L15 8.5L22 12L15 15.5L12 22L9 15.5L2 12L9 8.5L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="message-content-wrapper">
+                        <div class="thinking-steps">${stepsHtml}</div>
+                        <div class="message-bubble assistant">
+                            <p>${escapeHtml(text)}</p>
+                        </div>
+                        <div class="message-sources">
+                            <span class="sources-label">Sources:</span>
+                            <div class="sources-list">${sourcesHtml}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatContent.insertAdjacentHTML('beforeend', messageHtml);
+            scrollToBottom();
+        }
+
+        function getSources(steps) {
+            const sources = [];
+            const icons = {
+                project: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                documents: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+                web: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke-width="2"/></svg>',
+                research: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2a3 3 0 00-3 3v7a3 3 0 006 0V5a3 3 0 00-3-3z" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8" stroke-width="2" stroke-linecap="round"/></svg>'
+            };
+
+            steps.forEach(step => {
+                const lowerStep = step.toLowerCase();
+                if (lowerStep.includes('project') && !sources.find(s => s.label === 'Project')) {
+                    sources.push({ icon: icons.project, label: 'Project', count: 12 });
+                }
+                if (lowerStep.includes('documents') && !sources.find(s => s.label === 'Documents')) {
+                    sources.push({ icon: icons.documents, label: 'Documents', count: 8 });
+                }
+                if (lowerStep.includes('web') && !sources.find(s => s.label === 'Web')) {
+                    sources.push({ icon: icons.web, label: 'Web', count: 5 });
+                }
+                if (lowerStep.includes('research') && !sources.find(s => s.label === 'Research')) {
+                    sources.push({ icon: icons.research, label: 'Research', count: 6 });
+                }
+            });
+
+            // Ensure at least 3 sources
+            if (sources.length < 3) {
+                if (!sources.find(s => s.label === 'Project')) {
+                    sources.push({ icon: icons.project, label: 'Project', count: 12 });
+                }
+                if (sources.length < 3 && !sources.find(s => s.label === 'Documents')) {
+                    sources.push({ icon: icons.documents, label: 'Documents', count: 8 });
+                }
+                if (sources.length < 3 && !sources.find(s => s.label === 'Research')) {
+                    sources.push({ icon: icons.research, label: 'Research', count: 6 });
+                }
+            }
+
+            return sources.slice(0, 3);
+        }
+
+        function generateResponse(userInput) {
+            const lowerInput = userInput.toLowerCase();
+
+            if (lowerInput.includes("team") || lowerInput.includes("member")) {
+                return "The project team consists of Sarah Chen (Project Lead), Michael Rodriguez (Developer), Emily Watson (Designer), James Kim (QA Engineer), Alex Thompson (Backend Developer), and Lisa Zhang (DevOps Engineer). They're all working together to make this project a success!";
+            }
+            if (lowerInput.includes("timeline") || lowerInput.includes("deadline") || lowerInput.includes("date")) {
+                return "The project started on January 15, 2025 and is expected to be completed by April 30, 2025. We're currently in the development phase (Phase 2), which runs from March 1 to April 15, 2025.";
+            }
+            if (lowerInput.includes("ideas") || lowerInput.includes("suggestions")) {
+                return "During our last conversation about Proactive Suggestions, we discussed several key ideas: contextual app recommendations based on user activity, intelligent timing for suggestions to avoid disruption, and personalization based on user preferences and behavior patterns. We also explored using browser signals like current tabs and recent navigation to inform suggestions.";
+            }
+
+            return "That's a great question! Based on the project information, I can help you with details about the team, timeline, budget, objectives, technologies, and current status. What would you like to know more about?";
+        }
+
+        function scrollToBottom() {
+            const chatContent = document.getElementById('chatContent');
+            chatContent.scrollTop = chatContent.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
 </body>
 </html>

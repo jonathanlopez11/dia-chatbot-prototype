@@ -39,7 +39,9 @@ export default async function handler(req, res) {
                 'Content-Type': 'application/json',
                 'x-api-key': ANTHROPIC_API_KEY,
                 'anthropic-version': '2023-06-01',
-                'anthropic-beta': 'prompt-caching-2024-07-31'
+                'anthropic-beta': req.body.thinking
+                    ? 'prompt-caching-2024-07-31,interleaved-thinking-2025-05-14,web-search-2025-03-05'
+                    : 'prompt-caching-2024-07-31,web-search-2025-03-05'
             },
             body: JSON.stringify({
                 ...req.body,
