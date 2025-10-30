@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Dia chatbot prototype - Chat with your projects using Anthropic Claude",
   "scripts": {
-    "dev": "vercel dev"
+    "start": "vercel dev",
+    "deploy": "git push && vercel --prod --yes"
   }
 }

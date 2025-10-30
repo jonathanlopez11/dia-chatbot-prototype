@@ -4,48 +4,67 @@ A minimal chatbot interface for chatting with your projects using Anthropic's Cl
 
 ## Features
 
-- Claude Sonnet 4.5 integration with conversation context
-- Project information sidebar (Overview, Team, Goals, Documents)
-- Purple-themed UI inspired by modern chat interfaces
-- Deployed on Vercel for easy sharing
+- 💬 **Streaming responses** - Text streams in real-time as Claude generates it
+- 🎨 **Purple-themed UI** - Modern chat interface with project sidebar
+- 📊 **Project context** - Overview, Team, Goals, and Documents sections
+- ☁️ **Vercel deployed** - Easy sharing with production URL
 
-## Local Development
+## Quick Start
 
-1. Install dependencies:
+### 1. Local Development
+Start the local dev server (runs at http://localhost:3000):
 ```bash
-npm install
+npm start
 ```
 
-2. Create `.env` file:
+This uses `vercel dev` which runs your app exactly like production. Make changes to `index.html` or `api/chat.js` and refresh your browser to see updates.
+
+### 2. Deploy to Production
+When you're ready to push changes to the live site:
 ```bash
-cp .env.example .env
-# Edit .env and add your ANTHROPIC_API_KEY
+# Commit your changes
+git add .
+git commit -m "Your change description"
+
+# Deploy to production (pushes to GitHub + deploys to Vercel)
+npm run deploy
 ```
 
-3. Start local dev server:
+**Production URL:** https://ai-chatbot-prototype-mu.vercel.app
+
+---
+
+## Recommended Workflow
+
 ```bash
-vercel dev
+# 1. Start local dev server
+npm start
+
+# 2. Make changes to files, test in browser at localhost:3000
+
+# 3. When satisfied, deploy to production
+npm run deploy
 ```
 
-## Deployment
+That's it! The `deploy` script will:
+- Push your code to GitHub
+- Deploy to Vercel production
+- Update the live site
 
-This project is configured for Vercel deployment:
-
-1. Deploy to Vercel:
-```bash
-vercel
-```
-
-2. Set environment variable in Vercel:
-```bash
-vercel env add ANTHROPIC_API_KEY
-```
-
-Or set it via the Vercel dashboard.
+---
 
 ## Project Structure
 
 - `index.html` - Frontend chat interface with project sidebar
-- `api/chat.js` - Vercel serverless function that proxies API requests to Anthropic
+- `api/chat.js` - Vercel serverless function for streaming Anthropic API responses
 - `vercel.json` - Vercel configuration
-- `package.json` - Node.js dependencies
+- `.env` - Local environment variables (API key)
+- `package.json` - Scripts and dependencies
+
+## Environment Variables
+
+The Anthropic API key is:
+- **Local:** Stored in `.env` file (already configured)
+- **Production:** Configured in Vercel dashboard (already set up)
+
+No need to manage these manually - they're already configured!
