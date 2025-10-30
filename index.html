@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dia Chat - Sonnet 4.5</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -362,97 +361,8 @@
         }
 
         .message.assistant .message-text {
-            background: transparent;
-            color: #2d2d2d;
-            padding: 0;
-            line-height: 1.5;
-        }
-
-        .message.assistant .message-text h1,
-        .message.assistant .message-text h2,
-        .message.assistant .message-text h3 {
-            margin-top: 16px;
-            margin-bottom: 8px;
-            line-height: 1.3;
-        }
-
-        .message.assistant .message-text h1 {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .message.assistant .message-text h2 {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .message.assistant .message-text h3 {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .message.assistant .message-text ul,
-        .message.assistant .message-text ol {
-            margin: 0 0 8px 0;
-            padding-left: 24px;
-        }
-
-        .message.assistant .message-text li {
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        .message.assistant .message-text li + li {
-            margin-top: 2px;
-        }
-
-        .message.assistant .message-text p {
-            margin: 0 0 8px 0;
-            line-height: 1.5;
-        }
-
-        .message.assistant .message-text p:last-child {
-            margin-bottom: 0;
-        }
-
-        .message.assistant .message-text > *:first-child {
-            margin-top: 0;
-        }
-
-        .message.assistant .message-text code {
-            background: #f0f0f0;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 13px;
-        }
-
-        .message.assistant .message-text pre {
-            background: #f0f0f0;
-            padding: 12px;
-            border-radius: 6px;
-            overflow-x: auto;
-            margin: 8px 0;
-        }
-
-        .message.assistant .message-text pre code {
-            background: transparent;
-            padding: 0;
-        }
-
-        .message.assistant .message-text strong {
-            font-weight: 600;
-        }
-
-        .message.assistant .message-text em {
-            font-style: italic;
-        }
-
-        .message.assistant .message-text blockquote {
-            border-left: 3px solid #8b5cf6;
-            padding-left: 12px;
-            margin: 8px 0;
-            color: #6e6b68;
+            background: white;
+            border: 1px solid #e5e5e0;
         }
 
         .message.system {
@@ -713,25 +623,8 @@
         let projectsData = null;
         let currentProject = null;
 
-        // Format text with markdown and citations (for assistant messages only)
-        function formatTextWithMarkdown(text) {
-            // Configure marked for inline rendering
-            marked.setOptions({
-                breaks: true, // Convert \n to <br>
-                gfm: true     // GitHub flavored markdown
-            });
-
-            // Parse markdown
-            let html = marked.parse(text);
-
-            // Apply citation formatting to the HTML
-            html = html.replace(/\[Source: ([^\]]+)\]/g, '<span class="citation">$1</span>');
-
-            return html;
-        }
-
-        // Format text with citations (for user messages - no markdown)
-        function formatCitations(text) {
+        // Format text with citations
+        function formatText(text) {
             // Escape HTML
             const div = document.createElement('div');
             div.textContent = text;
@@ -919,18 +812,18 @@
             messageDiv.className = `message ${role}`;
 
             if (role === 'system') {
-                messageDiv.innerHTML = `<div class="message-text">${formatCitations(text)}</div>`;
+                messageDiv.innerHTML = `<div class="message-text">${formatText(text)}</div>`;
             } else if (role === 'assistant') {
                 messageDiv.innerHTML = `
                     <div class="message-content">
-                        <div class="message-text">${formatTextWithMarkdown(text)}</div>
+                        <div class="message-text">${formatText(text)}</div>
                     </div>
                 `;
             } else {
                 // user message
                 messageDiv.innerHTML = `
                     <div class="message-content">
-                        <div class="message-text">${formatCitations(text)}</div>
+                        <div class="message-text">${formatText(text)}</div>
                     </div>
                 `;
             }
@@ -1064,7 +957,7 @@
                                     }
 
                                     fullText += text;
-                                    textElement.innerHTML = formatTextWithMarkdown(fullText);
+                                    textElement.innerHTML = formatText(fullText);
                                     chatContainer.scrollTop = chatContainer.scrollHeight;
                                 }
 
