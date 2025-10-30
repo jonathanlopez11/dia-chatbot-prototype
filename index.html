@@ -552,8 +552,27 @@
             document.getElementById('sendBtn').disabled = true;
             document.getElementById('userInput').disabled = true;
 
+            // Create empty assistant message to stream into
+            const chatContainer = document.getElementById('chatContainer');
+            const welcomeMsg = chatContainer.querySelector('.welcome-message');
+            if (welcomeMsg) {
+                welcomeMsg.remove();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message assistant';
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <div class="message-text"></div>
+                </div>
+            `;
+            chatContainer.appendChild(messageDiv);
+            const textElement = messageDiv.querySelector('.message-text');
+
+            let fullText = '';
+
             try {
-                // Call API endpoint (works locally and on Vercel)
+                // Call API endpoint with streaming
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: {
@@ -567,27 +586,71 @@
                 });
 
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error?.message || `API error: ${response.status}`);
+                    throw new Error(`API error: ${response.status}`);
                 }
 
-                const data = await response.json();
+                // Read the streaming response
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
 
-                // Extract assistant response
-                const assistantMessage = data.content[0].text;
+                while (true) {
+                    const { done, value } = await reader.read();
 
-                // Add assistant message to conversation history
-                conversationHistory.push({
-                    role: 'assistant',
-                    content: assistantMessage
-                });
+                    if (done) break;
 
-                // Add assistant response to chat
-                addMessage('assistant', assistantMessage);
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+
+                    // Keep the last incomplete line in the buffer
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6);
+
+                            if (data === '[DONE]') continue;
+
+                            try {
+                                const event = JSON.parse(data);
+
+                                // Handle content_block_delta events with text
+                                if (event.type === 'content_block_delta' &&
+                                    event.delta?.type === 'text_delta') {
+                                    const text = event.delta.text;
+                                    fullText += text;
+                                    textElement.textContent = fullText;
+                                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                                }
+
+                                // Handle errors
+                                if (event.error) {
+                                    throw new Error(event.error.message || 'Streaming error');
+                                }
+                            } catch (e) {
+                                // Ignore JSON parse errors for incomplete chunks
+                                if (!e.message.includes('Unexpected')) {
+                                    console.error('Parse error:', e);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Add complete message to conversation history
+                if (fullText) {
+                    conversationHistory.push({
+                        role: 'assistant',
+                        content: fullText
+                    });
+                } else {
+                    throw new Error('No response received from API');
+                }
 
             } catch (error) {
                 console.error('Error:', error);
-                addMessage('system', `Error: ${error.message}`);
+                textElement.textContent = `Error: ${error.message}`;
+                textElement.parentElement.parentElement.className = 'message system';
             } finally {
                 // Re-enable input
                 isProcessing = false;

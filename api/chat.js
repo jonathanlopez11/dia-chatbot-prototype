@@ -1,4 +1,4 @@
-// Vercel serverless function for Anthropic API proxy
+// Vercel serverless function for Anthropic API proxy with streaming
 export default async function handler(req, res) {
     // Enable CORS
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -27,7 +27,12 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: { message: 'API key not configured' } });
         }
 
-        // Call Anthropic API
+        // Set up SSE headers for streaming
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
+        // Call Anthropic API with streaming enabled
         const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
             headers: {
@@ -35,18 +40,39 @@ export default async function handler(req, res) {
                 'x-api-key': ANTHROPIC_API_KEY,
                 'anthropic-version': '2023-06-01'
             },
-            body: JSON.stringify(req.body)
+            body: JSON.stringify({
+                ...req.body,
+                stream: true
+            })
         });
 
-        const data = await response.json();
-
         if (!response.ok) {
-            return res.status(response.status).json(data);
+            const errorData = await response.json();
+            res.write(`data: ${JSON.stringify({ error: errorData })}\n\n`);
+            res.end();
+            return;
         }
 
-        res.status(200).json(data);
+        // Stream the response from Anthropic to the client
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+            const { done, value } = await reader.read();
+
+            if (done) {
+                res.end();
+                break;
+            }
+
+            // Decode and forward the chunk
+            const chunk = decoder.decode(value, { stream: true });
+            res.write(chunk);
+        }
+
     } catch (error) {
         console.error('Error:', error);
-        res.status(500).json({ error: { message: error.message } });
+        res.write(`data: ${JSON.stringify({ error: { message: error.message } })}\n\n`);
+        res.end();
     }
 }
