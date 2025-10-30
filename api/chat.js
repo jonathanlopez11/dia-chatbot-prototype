@@ -32,31 +32,17 @@ export default async function handler(req, res) {
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('Connection', 'keep-alive');
 
-        // Call Anthropic API with streaming enabled and web_fetch tool
+        // Call Anthropic API with streaming enabled
         const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'x-api-key': ANTHROPIC_API_KEY,
-                'anthropic-version': '2023-06-01',
-                'anthropic-beta': 'web-fetch-2025-09-10'
+                'anthropic-version': '2023-06-01'
             },
             body: JSON.stringify({
                 ...req.body,
-                stream: true,
-                tools: [
-                    {
-                        type: 'web_fetch_20250910',
-                        name: 'web_fetch',
-                        allowed_domains: [
-                            'notion.so',
-                            'www.notion.so',
-                            'browserinc.notion.so',
-                            'linear.app'
-                        ],
-                        max_uses: 10
-                    }
-                ]
+                stream: true
             })
         });
 

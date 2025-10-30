@@ -1,44 +1,69 @@
 {
   "projects": [
     {
-      "id": "project1",
-      "name": "Marketing Campaign Q1 2025",
-      "shortDescription": "Digital marketing campaign focused on brand awareness and lead generation across multiple channels.",
+      "id": "alexandra-apps",
+      "name": "Apps: Proactive Suggestion",
+      "shortDescription": "AI-driven feature that intelligently suggests relevant browser apps and actions based on user context and workflow.",
       "lead": {
-        "name": "Sarah Miller",
-        "initials": "SM",
-        "role": "Project Lead",
-        "email": "sarah.miller@company.com",
-        "bio": "Sarah has 10 years of experience in digital marketing and has led campaigns that generated over $50M in revenue. She specializes in multi-channel strategies and data-driven decision making."
+        "name": "Alexandra Medway",
+        "initials": "AM",
+        "role": "Pod Lead",
+        "email": "alexandra@thebrowser.company",
+        "bio": "Alexandra is an Engineering Manager and Pod Lead for the Apps Pod. She joined The Browser Company in 2020 as the second engineer and has been instrumental in building the company's core browser technology."
       },
-      "overview": "This project focuses on launching our Q1 marketing campaign across digital channels. The campaign aims to increase brand awareness by 30% and drive qualified leads to our sales team.",
+      "overview": "Apps: Proactive Suggestion is a feature that aims to intelligently suggest relevant browser apps and actions to users based on their current context and workflow. The goal is to surface the right tools at the right time without requiring explicit user invocation, making Dia feel more anticipatory and helpful.",
       "team": [
         {
-          "name": "Sarah Miller",
-          "initials": "SM",
-          "role": "Project Lead"
+          "name": "Alexandra Medway",
+          "initials": "AM",
+          "role": "Pod Lead"
         },
         {
-          "name": "John Davis",
-          "initials": "JD",
-          "role": "Content Strategist"
+          "name": "Freddy",
+          "initials": "F",
+          "role": "Engineer (Meetings)"
         },
         {
-          "name": "Emily Kim",
-          "initials": "EK",
-          "role": "Design Lead"
+          "name": "Ben C.",
+          "initials": "BC",
+          "role": "Engineer & Designer (Meetings)"
         },
         {
-          "name": "Michael Rodriguez",
-          "initials": "MR",
-          "role": "Analytics"
+          "name": "Charlie",
+          "initials": "C",
+          "role": "Designer (Meetings)"
+        },
+        {
+          "name": "Rishi",
+          "initials": "R",
+          "role": "Engineer (Proactive Suggestions)"
+        },
+        {
+          "name": "Matt M.",
+          "initials": "MM",
+          "role": "Engineer (Proactive Suggestions)"
+        },
+        {
+          "name": "Kasper",
+          "initials": "K",
+          "role": "Engineer (Proactive Suggestions)"
+        },
+        {
+          "name": "JLo",
+          "initials": "JL",
+          "role": "Model Behavior (Proactive Suggestions)"
+        },
+        {
+          "name": "Tara Feener",
+          "initials": "TF",
+          "role": "Eng Leadership Stakeholder"
         }
       ],
       "goals": [
-        "Launch social media campaign by Jan 15",
-        "Create 20 blog posts and video content",
-        "Achieve 30% increase in brand awareness",
-        "Generate 500+ qualified leads"
+        "Enable Dia to proactively identify moments where specific apps or actions would be valuable to the user",
+        "Reduce friction in discovering and using browser apps by presenting them contextually",
+        "Create a system that feels helpful rather than intrusive, with appropriate confidence thresholds for suggestions",
+        "Establish patterns for how AI-driven suggestions integrate into the browser UX"
       ],
       "documents": [
         {
@@ -46,6 +71,7 @@
           "name": "Apps Espresso Weekly",
           "summary": "Weekly tracking document for project and task progress for the Apps work stream",
           "url": "https://www.notion.so/browserinc/Apps-Espresso-Weekly-29961250367680199b5cc2f780ffd176",
+          "contentFile": "documents/apps-espresso-weekly.md",
           "updated": "2 days ago"
         },
         {
@@ -53,6 +79,7 @@
           "name": "Linear Board - Apps Pod",
           "summary": "Linear board to keep track of task progress for the Apps pod",
           "url": "https://linear.app/the-browser-company/team/APS/active",
+          "contentFile": "documents/linear-apps-pod.md",
           "updated": "yesterday"
         },
         {
@@ -60,6 +87,7 @@
           "name": "Apps Espresso Planning",
           "summary": "Doc outlining Dia's Apps Espresso plan to make meetings best-in-class via Google Meet integrations and proactive suggestions, with goals, metrics, teams, risks, and dependencies.",
           "url": "https://www.notion.so/browserinc/Apps-Espresso-Planning-2846125036768032aee2dbf910448d83",
+          "contentFile": "documents/apps-espresso-planning.md",
           "updated": "1 week ago"
         },
         {
@@ -67,6 +95,7 @@
           "name": "Apps Espresso Kickoff",
           "summary": "Kickoff doc outlining Dia's Apps Espresso milestone to make meetings and proactive suggestions best‑in‑class, with teams, goals, success metrics, and initial projects.",
           "url": "https://www.notion.so/browserinc/Apps-Espresso-Kickoff-28c61250367680f0b859e167f1192eb6",
+          "contentFile": "documents/apps-espresso-kickoff.md",
           "updated": "3 days ago"
         },
         {
@@ -74,10 +103,11 @@
           "name": "Espresso Product Strategy",
           "summary": "Product strategy document outlining Dia's Espresso milestone P0/P1 goals across Browser, Chat, Apps, and Enterprise to drive toward one million weekly active users, plus team discussions and open questions on prioritization, metrics, and differentiation.",
           "url": "https://www.notion.so/browserinc/Espresso-Product-Strategy-Context-284612503676800c8c6cf58013f2665b",
+          "contentFile": "documents/espresso-product-strategy.md",
           "updated": "5 days ago"
         }
       ],
-      "context": "PROJECT CONTEXT:\nProject: Marketing Campaign Q1 2025\nLead: Sarah Miller (Project Lead, 10 years experience in digital marketing)\n\nOVERVIEW:\nThis is a comprehensive Q1 marketing campaign focused on increasing brand awareness by 30% and generating 500+ qualified leads. The campaign will run across multiple digital channels including social media, content marketing, paid ads, and email marketing.\n\nKEY OBJECTIVES:\n- Launch social media campaign by January 15th\n- Create 20 pieces of high-quality blog posts and video content\n- Achieve 30% increase in brand awareness metrics\n- Generate 500+ qualified marketing leads\n- Stay within $250K budget allocation\n\nTEAM MEMBERS:\n- Sarah Miller: Project Lead and campaign strategist\n- John Davis: Content Strategist responsible for all written and video content\n- Emily Kim: Design Lead managing all visual assets and brand consistency\n- Michael Rodriguez: Analytics lead tracking performance and ROI\n\nKEY DOCUMENTS (you can fetch these URLs to read their contents):\n1. Apps Espresso Weekly: https://www.notion.so/browserinc/Apps-Espresso-Weekly-29961250367680199b5cc2f780ffd176\n   Weekly tracking document for project and task progress for the Apps work stream\n\n2. Linear Board - Apps Pod: https://linear.app/the-browser-company/team/APS/active\n   Linear board to keep track of task progress for the Apps pod\n\n3. Apps Espresso Planning: https://www.notion.so/browserinc/Apps-Espresso-Planning-2846125036768032aee2dbf910448d83\n   Doc outlining Dia's Apps Espresso plan to make meetings best-in-class via Google Meet integrations and proactive suggestions, with goals, metrics, teams, risks, and dependencies.\n\n4. Apps Espresso Kickoff: https://www.notion.so/browserinc/Apps-Espresso-Kickoff-28c61250367680f0b859e167f1192eb6\n   Kickoff doc outlining Dia's Apps Espresso milestone to make meetings and proactive suggestions best‑in‑class, with teams, goals, success metrics, and initial projects.\n\n5. Espresso Product Strategy: https://www.notion.so/browserinc/Espresso-Product-Strategy-Context-284612503676800c8c6cf58013f2665b\n   Product strategy document outlining Dia's Espresso milestone P0/P1 goals across Browser, Chat, Apps, and Enterprise to drive toward one million weekly active users, plus team discussions and open questions on prioritization, metrics, and differentiation.\n\nCURRENT STATUS:\nProject is in planning phase. Team has completed strategy and is now building out content calendar and creative assets. Campaign launches January 15th."
+      "context": "IMPORTANT CONTEXT:\nThis page includes detailed information about the user that you are working with. They are coming to you with questions and conversations as if you are their coworker. To better equip you, this page includes the relevant context and information that you need to know that a coworker would know about the user. It starts with specific information about the exact project the user wants help with, and then continues with more general and high level information about the user, the company, and other relevant work context. When responding to the user, always assume that they are asking questions specifically about the context of either this exact project or their work more broadly.\n\nUSER PROJECT:\nThe user is currently working on a project called Apps: Proactive Suggestion. This is a work stream that is part of the Espresso Milestone. Apps: Proactive Suggestion is a feature that aims to intelligently suggest relevant browser apps and actions to users based on their current context and workflow. The goal is to surface the right tools at the right time without requiring explicit user invocation, making Dia feel more anticipatory and helpful.\n\nKEY GOALS:\n- Enable Dia to proactively identify moments where specific apps or actions would be valuable to the user\n- Reduce friction in discovering and using browser apps by presenting them contextually\n- Create a system that feels helpful rather than intrusive, with appropriate confidence thresholds for suggestions\n- Establish patterns for how AI-driven suggestions integrate into the browser UX\n\nCURRENT STATUS & CHALLENGES:\nThe team is working through the core questions of suggestion triggering logic: what signals indicate a user would benefit from a particular app, how to balance proactivity with user control, and how to measure success for this type of anticipatory feature. Key challenges include establishing reliable evaluation methods for a feature that depends heavily on contextual appropriateness, and designing prompts that can accurately assess user intent from available signals.\n\nUSER PROFILE:\nThe user's name is Alexandra Medway. She is a 30 years old female that lives in New York City. She is originally from New York. She's been working at The Browser Company since it started in 2020 and joined as the second engineer. She is now an Engineering Manager and is a Pod Lead for the Apps Pod.\n\nCOMPANY OVERVIEW:\nThe Browser Company of New York is a startup focused on designing browsers that feel more personal and productive than legacy options. Founded in 2019 by Josh Miller and Hursh Agrawal, it launched the Arc browser publicly in 2022 with a reimagined interface, organizational \"Spaces,\" and a vision of the browser as the web's operating system. The company later introduced Dia, positioning it as a work-focused, AI-enabled browser optimized for modern SaaS workflows. Its mission is to push browser design forward after decades of stagnation, emphasizing creativity, focus, and a sense of \"home\" on the internet. In September 2025, Atlassian announced an agreement to acquire The Browser Company to build an AI-first browser for knowledge workers and integrate enterprise-grade security and admin controls. Post-acquisition, Atlassian's vision is to make Dia the go-to browser for work by enriching tabs with context and connecting tasks across tools.\n\nWORK METHODOLOGY:\nWe work in named, ~6‑week milestones with a dedicated planning week up front; pods publish lightweight plans in Notion that set outcome‑based goals, success measures, risks, owners, and schedules, and align to company strategy. During execution, teams run three two‑week sprints with weekly reassessment, track projects in Linear as the source of truth with burndowns and status signals, and keep cross‑functional partners aligned via Milestone Planning hubs and kickoff pages. We cut weekly releases, and before high‑stakes dates we tighten quality bars with \"pencils down,\" stricter PR review, and risk assessments. Company milestone dates are also mirrored on the shared calendar so everyone can plan around \"week x\" markers. Examples of this flow are visible across Espresso plans (Browser, Services, DevEx, Enterprise) and related updates in Slack.\n\nPOD STRUCTURE:\n- Eng Leadership Stakeholder: Tara Feener\n- Pod Lead: Alexandra Medway\n- Meetings Workstream: Freddy (Engineer), Ben C. (Engineer & Designer), Charlie (Designer)\n- Proactive Suggestions Workstream: Rishi (Engineer), Matt M. (Engineer), Kasper (Engineer), JLo (Model Behavior)\n\nKEY PROJECT DOCUMENTS:\nThe following documents contain detailed information about this project. Their full contents are included below.\n\nIMPORTANT - CITATION INSTRUCTIONS:\nWhen you reference information from any of the documents below, you MUST cite your source by including the document name in brackets at the end of the relevant sentence or paragraph. Use this format: [Source: Document Name]\n\nFor example:\n- \"The team is focusing on Google Meet integrations. [Source: Apps Espresso Planning]\"\n- \"According to the kickoff doc, the mandate is to make meetings best-in-class. [Source: Apps Espresso Kickoff]\"\n\nAlways cite your sources to help users know where information comes from."
     },
     {
       "id": "project2",

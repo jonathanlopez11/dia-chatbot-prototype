@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dia Chat - Sonnet 4.5</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -27,7 +28,7 @@
         }
 
         .sidebar {
-            width: 380px;
+            width: 30%;
             background: white;
             border-right: 1px solid #e5e5e0;
             overflow-y: auto;
@@ -361,8 +362,97 @@
         }
 
         .message.assistant .message-text {
-            background: #f0f0f0;
+            background: transparent;
             color: #2d2d2d;
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        .message.assistant .message-text h1,
+        .message.assistant .message-text h2,
+        .message.assistant .message-text h3 {
+            margin-top: 16px;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .message.assistant .message-text h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .message.assistant .message-text h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .message.assistant .message-text h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .message.assistant .message-text ul,
+        .message.assistant .message-text ol {
+            margin: 0 0 8px 0;
+            padding-left: 24px;
+        }
+
+        .message.assistant .message-text li {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .message.assistant .message-text li + li {
+            margin-top: 2px;
+        }
+
+        .message.assistant .message-text p {
+            margin: 0 0 8px 0;
+            line-height: 1.5;
+        }
+
+        .message.assistant .message-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message.assistant .message-text > *:first-child {
+            margin-top: 0;
+        }
+
+        .message.assistant .message-text code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .message.assistant .message-text pre {
+            background: #f0f0f0;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+
+        .message.assistant .message-text pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .message.assistant .message-text strong {
+            font-weight: 600;
+        }
+
+        .message.assistant .message-text em {
+            font-style: italic;
+        }
+
+        .message.assistant .message-text blockquote {
+            border-left: 3px solid #8b5cf6;
+            padding-left: 12px;
+            margin: 8px 0;
+            color: #6e6b68;
         }
 
         .message.system {
@@ -376,6 +466,25 @@
             border-radius: 6px;
             font-size: 13px;
             text-align: center;
+        }
+
+        .citation {
+            display: inline;
+            background: #f3e8ff;
+            color: #2d2d2d;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: normal;
+            margin-left: 4px;
+            white-space: nowrap;
+            border: 1px solid #e9d5ff;
+        }
+
+        .citation::before {
+            content: "Source: ";
+            color: #7c3aed;
+            font-weight: 500;
         }
 
         .input-container {
@@ -487,21 +596,62 @@
                 <button class="back-btn" onclick="showProjectsList()">← All Projects</button>
 
                 <div class="sidebar-header">
-                    <h2>Project Info</h2>
                     <div class="project-name">Marketing Campaign Q1 2025</div>
                 </div>
 
-                <!-- Overview Section -->
+                <!-- Project Overview Section -->
                 <div class="sidebar-section">
-                    <h3>Overview</h3>
+                    <h3>Project Overview</h3>
                     <div class="sidebar-content">
                         This project focuses on launching our Q1 marketing campaign across digital channels. The campaign aims to increase brand awareness by 30% and drive qualified leads to our sales team.
                     </div>
                 </div>
 
-                <!-- Team Section -->
+                <!-- Project Goals Section -->
                 <div class="sidebar-section">
-                    <h3>Team</h3>
+                    <h3>Project Goals</h3>
+                    <div class="goal-item">
+                        <div class="goal-checkbox"></div>
+                        <div>Launch social media campaign by Jan 15</div>
+                    </div>
+                    <div class="goal-item">
+                        <div class="goal-checkbox"></div>
+                        <div>Create 20 blog posts and video content</div>
+                    </div>
+                    <div class="goal-item">
+                        <div class="goal-checkbox"></div>
+                        <div>Achieve 30% increase in brand awareness</div>
+                    </div>
+                    <div class="goal-item">
+                        <div class="goal-checkbox"></div>
+                        <div>Generate 500+ qualified leads</div>
+                    </div>
+                </div>
+
+                <!-- Top Docs and Links Section -->
+                <div class="sidebar-section">
+                    <h3>Top Docs and Links</h3>
+                    <div class="document-item">
+                        <div class="document-name">Campaign Strategy.pdf</div>
+                        <div class="document-meta">Updated 2 days ago</div>
+                    </div>
+                    <div class="document-item">
+                        <div class="document-name">Content Calendar.xlsx</div>
+                        <div class="document-meta">Updated yesterday</div>
+                    </div>
+                    <div class="document-item">
+                        <div class="document-name">Brand Guidelines.pdf</div>
+                        <div class="document-meta">Updated 1 week ago</div>
+                    </div>
+                    <div class="document-item">
+                        <div class="document-name">Q1 Budget.xlsx</div>
+                        <div class="document-meta">Updated 3 days ago</div>
+                    </div>
+                </div>
+
+                <!-- Team Members Section -->
+                <div class="sidebar-section">
+                    <h3>Team Members</h3>
                     <div class="team-member">
                         <div class="team-avatar">SM</div>
                         <div class="team-info">
@@ -529,48 +679,6 @@
                             <div class="team-name">Michael Rodriguez</div>
                             <div class="team-role">Analytics</div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Goals Section -->
-                <div class="sidebar-section">
-                    <h3>Goals</h3>
-                    <div class="goal-item">
-                        <div class="goal-checkbox"></div>
-                        <div>Launch social media campaign by Jan 15</div>
-                    </div>
-                    <div class="goal-item">
-                        <div class="goal-checkbox"></div>
-                        <div>Create 20 blog posts and video content</div>
-                    </div>
-                    <div class="goal-item">
-                        <div class="goal-checkbox"></div>
-                        <div>Achieve 30% increase in brand awareness</div>
-                    </div>
-                    <div class="goal-item">
-                        <div class="goal-checkbox"></div>
-                        <div>Generate 500+ qualified leads</div>
-                    </div>
-                </div>
-
-                <!-- Top Documents Section -->
-                <div class="sidebar-section">
-                    <h3>Top Documents</h3>
-                    <div class="document-item">
-                        <div class="document-name">Campaign Strategy.pdf</div>
-                        <div class="document-meta">Updated 2 days ago</div>
-                    </div>
-                    <div class="document-item">
-                        <div class="document-name">Content Calendar.xlsx</div>
-                        <div class="document-meta">Updated yesterday</div>
-                    </div>
-                    <div class="document-item">
-                        <div class="document-name">Brand Guidelines.pdf</div>
-                        <div class="document-meta">Updated 1 week ago</div>
-                    </div>
-                    <div class="document-item">
-                        <div class="document-name">Q1 Budget.xlsx</div>
-                        <div class="document-meta">Updated 3 days ago</div>
                     </div>
                 </div>
             </div>
@@ -605,12 +713,72 @@
         let projectsData = null;
         let currentProject = null;
 
+        // Format text with markdown and citations (for assistant messages only)
+        function formatTextWithMarkdown(text) {
+            // Configure marked for inline rendering
+            marked.setOptions({
+                breaks: true, // Convert \n to <br>
+                gfm: true     // GitHub flavored markdown
+            });
+
+            // Parse markdown
+            let html = marked.parse(text);
+
+            // Apply citation formatting to the HTML
+            html = html.replace(/\[Source: ([^\]]+)\]/g, '<span class="citation">$1</span>');
+
+            return html;
+        }
+
+        // Format text with citations (for user messages - no markdown)
+        function formatCitations(text) {
+            // Escape HTML
+            const div = document.createElement('div');
+            div.textContent = text;
+            let escaped = div.innerHTML;
+
+            // Replace newlines with <br>
+            escaped = escaped.replace(/\n/g, '<br>');
+
+            // Apply citation formatting
+            return escaped.replace(/\[Source: ([^\]]+)\]/g, '<span class="citation">$1</span>');
+        }
+
+        // Load document contents from files
+        async function loadDocumentContents(project) {
+            if (!project.documents || project.documents.length === 0) {
+                return '';
+            }
+
+            const documentContents = [];
+            for (const doc of project.documents) {
+                if (doc.contentFile) {
+                    try {
+                        const response = await fetch(`/${doc.contentFile}`);
+                        if (response.ok) {
+                            const content = await response.text();
+                            documentContents.push(`\n\n=== ${doc.name} ===\n${content}`);
+                        }
+                    } catch (error) {
+                        console.error(`Error loading ${doc.contentFile}:`, error);
+                    }
+                }
+            }
+
+            return documentContents.join('\n');
+        }
+
         // Load projects data
         async function loadProjects() {
             try {
                 const response = await fetch('/projects.json');
                 projectsData = await response.json();
                 currentProject = projectsData.projects[0]; // Default to first project
+
+                // Load document contents for default project
+                const documentContents = await loadDocumentContents(currentProject);
+                currentProject.fullContext = currentProject.context + documentContents;
+
                 renderProjectsList();
                 renderProjectDetail(currentProject);
             } catch (error) {
@@ -677,28 +845,27 @@
                 <button class="back-btn" onclick="showProjectsList()">← All Projects</button>
 
                 <div class="sidebar-header">
-                    <h2>Project Info</h2>
                     <div class="project-name">${project.name}</div>
                 </div>
 
                 <div class="sidebar-section">
-                    <h3>Overview</h3>
+                    <h3>Project Overview</h3>
                     <div class="sidebar-content">${project.overview}</div>
                 </div>
 
                 <div class="sidebar-section">
-                    <h3>Team</h3>
-                    ${teamHTML}
-                </div>
-
-                <div class="sidebar-section">
-                    <h3>Goals</h3>
+                    <h3>Project Goals</h3>
                     ${goalsHTML}
                 </div>
 
                 <div class="sidebar-section">
-                    <h3>Top Documents</h3>
+                    <h3>Top Docs and Links</h3>
                     ${documentsHTML}
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Team Members</h3>
+                    ${teamHTML}
                 </div>
             `;
         }
@@ -708,10 +875,15 @@
             document.getElementById('projectDetail').classList.remove('active');
         }
 
-        function showProject(projectId) {
+        async function showProject(projectId) {
             const project = projectsData.projects.find(p => p.id === projectId);
             if (project) {
                 currentProject = project;
+
+                // Load document contents
+                const documentContents = await loadDocumentContents(project);
+                currentProject.fullContext = project.context + documentContents;
+
                 renderProjectDetail(project);
 
                 // Reset conversation when switching projects
@@ -747,11 +919,18 @@
             messageDiv.className = `message ${role}`;
 
             if (role === 'system') {
-                messageDiv.innerHTML = `<div class="message-text">${text}</div>`;
-            } else {
+                messageDiv.innerHTML = `<div class="message-text">${formatCitations(text)}</div>`;
+            } else if (role === 'assistant') {
                 messageDiv.innerHTML = `
                     <div class="message-content">
-                        <div class="message-text">${text}</div>
+                        <div class="message-text">${formatTextWithMarkdown(text)}</div>
+                    </div>
+                `;
+            } else {
+                // user message
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-text">${formatCitations(text)}</div>
                     </div>
                 `;
             }
@@ -809,7 +988,7 @@
                     messages = [
                         {
                             role: 'user',
-                            content: currentProject.context
+                            content: currentProject.fullContext || currentProject.context
                         },
                         {
                             role: 'assistant',
@@ -885,7 +1064,7 @@
                                     }
 
                                     fullText += text;
-                                    textElement.textContent = fullText;
+                                    textElement.innerHTML = formatTextWithMarkdown(fullText);
                                     chatContainer.scrollTop = chatContainer.scrollHeight;
                                 }
 
