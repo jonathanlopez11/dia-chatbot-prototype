@@ -469,39 +469,6 @@
             font-size: 15px;
             line-height: 1.5;
         }
-
-        .typing-indicator {
-            display: inline-flex;
-            gap: 4px;
-            align-items: center;
-        }
-
-        .typing-indicator span {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #c4c4c4;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typing {
-            0%, 60%, 100% {
-                transform: translateY(0);
-                opacity: 0.7;
-            }
-            30% {
-                transform: translateY(-4px);
-                opacity: 1;
-            }
-        }
     </style>
 </head>
 <body>
@@ -901,31 +868,8 @@
             document.getElementById('userInput').disabled = true;
 
             const chatContainer = document.getElementById('chatContainer');
-
-            // Remove welcome message if present
-            const welcomeMsg = chatContainer.querySelector('.welcome-message');
-            if (welcomeMsg) {
-                welcomeMsg.remove();
-            }
-
-            // Create assistant message bubble immediately with typing indicator
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message assistant';
-            messageDiv.innerHTML = `
-                <div class="message-content">
-                    <div class="message-text">
-                        <div class="typing-indicator">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            chatContainer.appendChild(messageDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-
-            const textElement = messageDiv.querySelector('.message-text');
+            let messageDiv = null;
+            let textElement = null;
             let fullText = '';
 
             try {
@@ -990,9 +934,22 @@
                                     event.delta?.type === 'text_delta') {
                                     const text = event.delta.text;
 
-                                    // On first text chunk, remove typing indicator
-                                    if (fullText === '') {
-                                        textElement.innerHTML = '';
+                                    // Create message bubble on first text chunk
+                                    if (!messageDiv) {
+                                        const welcomeMsg = chatContainer.querySelector('.welcome-message');
+                                        if (welcomeMsg) {
+                                            welcomeMsg.remove();
+                                        }
+
+                                        messageDiv = document.createElement('div');
+                                        messageDiv.className = 'message assistant';
+                                        messageDiv.innerHTML = `
+                                            <div class="message-content">
+                                                <div class="message-text"></div>
+                                            </div>
+                                        `;
+                                        chatContainer.appendChild(messageDiv);
+                                        textElement = messageDiv.querySelector('.message-text');
                                     }
 
                                     fullText += text;
@@ -1027,9 +984,21 @@
             } catch (error) {
                 console.error('Error:', error);
 
-                // Update message with error
-                textElement.textContent = `Error: ${error.message}`;
-                messageDiv.className = 'message system';
+                // Create or update message with error
+                if (!messageDiv) {
+                    const welcomeMsg = chatContainer.querySelector('.welcome-message');
+                    if (welcomeMsg) {
+                        welcomeMsg.remove();
+                    }
+
+                    messageDiv = document.createElement('div');
+                    messageDiv.className = 'message system';
+                    messageDiv.innerHTML = `<div class="message-text">Error: ${error.message}</div>`;
+                    chatContainer.appendChild(messageDiv);
+                } else {
+                    textElement.textContent = `Error: ${error.message}`;
+                    messageDiv.className = 'message system';
+                }
             } finally {
                 // Re-enable input
                 isProcessing = false;
