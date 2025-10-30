@@ -471,15 +471,14 @@
         }
 
         .typing-indicator {
-            display: flex;
-            gap: 6px;
-            padding: 12px 16px;
+            display: inline-flex;
+            gap: 4px;
             align-items: center;
         }
 
         .typing-indicator span {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: #c4c4c4;
             animation: typing 1.4s infinite;
@@ -499,7 +498,7 @@
                 opacity: 0.7;
             }
             30% {
-                transform: translateY(-10px);
+                transform: translateY(-4px);
                 opacity: 1;
             }
         }
@@ -930,21 +929,21 @@
             let fullText = '';
 
             try {
-                // Prepare messages with project context
-                let messages = [...conversationHistory];
+                // Prepare API request with prompt caching
+                const requestBody = {
+                    model: 'claude-sonnet-4-5-20250929',
+                    max_tokens: 4096,
+                    messages: conversationHistory
+                };
 
-                // Add project context as system message if this is the first user message
-                if (conversationHistory.length === 1 && currentProject) {
-                    messages = [
+                // Add project context as cached system message
+                if (currentProject) {
+                    requestBody.system = [
                         {
-                            role: 'user',
-                            content: currentProject.fullContext || currentProject.context
-                        },
-                        {
-                            role: 'assistant',
-                            content: `I understand. I have the context for the ${currentProject.name} project. How can I help you with this project?`
-                        },
-                        ...conversationHistory
+                            type: 'text',
+                            text: currentProject.fullContext || currentProject.context,
+                            cache_control: { type: 'ephemeral' }
+                        }
                     ];
                 }
 
@@ -954,11 +953,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        model: 'claude-sonnet-4-5-20250929',
-                        max_tokens: 4096,
-                        messages: messages
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
                 if (!response.ok) {
