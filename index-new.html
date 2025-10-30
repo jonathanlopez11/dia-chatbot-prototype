@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with your Projects</title>
+    <style>
+        @custom-variant dark (&:is(.dark *));
+
+        :root {
+            --font-size: 16px;
+            --background: #ffffff;
+            --foreground: oklch(0.145 0 0);
+            --card: #ffffff;
+            --card-foreground: oklch(0.145 0 0);
+            --popover: oklch(1 0 0);
+            --popover-foreground: oklch(0.145 0 0);
+            --primary: #030213;
+            --primary-foreground: oklch(1 0 0);
+            --secondary: oklch(0.95 0.0058 264.53);
+            --secondary-foreground: #030213;
+            --muted: #ececf0;
+            --muted-foreground: #717182;
+            --accent: #e9ebef;
+            --accent-foreground: #030213;
+            --destructive: #d4183d;
+            --destructive-foreground: #ffffff;
+            --border: rgba(0, 0, 0, 0.1);
+            --input: transparent;
+            --input-background: #f3f3f5;
+            --switch-background: #cbced4;
+            --font-weight-medium: 500;
+            --font-weight-normal: 400;
+            --ring: oklch(0.708 0 0);
+            --radius: 0.625rem;
+            --sidebar: oklch(0.985 0 0);
+            --sidebar-foreground: oklch(0.145 0 0);
+            --sidebar-primary: #030213;
+            --sidebar-primary-foreground: oklch(0.985 0 0);
+            --sidebar-accent: oklch(0.97 0 0);
+            --sidebar-accent-foreground: oklch(0.205 0 0);
+            --sidebar-border: oklch(0.922 0 0);
+            --sidebar-ring: oklch(0.708 0 0);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: var(--font-size);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 400px;
+            background: var(--sidebar);
+            color: var(--sidebar-foreground);
+            padding: 32px 24px;
+            overflow-y: auto;
+            border-right: 1px solid var(--sidebar-border);
+        }
+
+        .sidebar-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--sidebar);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--muted-foreground);
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--sidebar-accent);
+            border-color: var(--border);
+        }
+
+        .project-label {
+            font-size: 13px;
+            color: var(--muted-foreground);
+            margin-bottom: 8px;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .project-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--sidebar-foreground);
+            margin-bottom: 40px;
+            line-height: 1.2;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--sidebar-foreground);
+            margin-bottom: 16px;
+        }
+
+        .documents-container {
+            background: var(--sidebar-accent);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+
+        .document-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            color: var(--sidebar-accent-foreground);
+            font-size: 14px;
+        }
+
+        .document-item:not(:last-child) {
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+
+        .document-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.6;
+        }
+
+        .section-with-icon {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .section-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.5;
+            margin-top: 4px;
+        }
+
+        .description-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--sidebar-accent-foreground);
+        }
+
+        .team-member {
+            margin-bottom: 12px;
+        }
+
+        .team-member-name {
+            color: var(--sidebar-primary);
+            font-weight: var(--font-weight-medium);
+            font-size: 14px;
+        }
+
+        .team-member-role {
+            color: var(--muted-foreground);
+            font-size: 14px;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--background);
+        }
+
+        .chat-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chat-subtitle {
+            font-size: 13px;
+            color: var(--muted-foreground);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sparkle-icon {
+            font-size: 14px;
+        }
+
+        .chat-title {
+            font-size: 36px;
+            font-weight: 600;
+            color: var(--foreground);
+        }
+
+        .chat-content {
+            flex: 1;
+            padding: 40px 32px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .message-bubble {
+            background: var(--accent);
+            border-radius: 16px;
+            padding: 20px 24px;
+            max-width: 700px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .message-icon {
+            font-size: 18px;
+            margin-top: 2px;
+        }
+
+        .message-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--accent-foreground);
+        }
+
+        .suggestions-section {
+            margin-top: auto;
+            padding: 0 32px 24px;
+        }
+
+        .suggestions-label {
+            font-size: 13px;
+            color: var(--muted-foreground);
+            margin-bottom: 12px;
+        }
+
+        .suggestions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .suggestion-btn {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--foreground);
+            transition: all 0.2s;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .suggestion-btn:hover {
+            background: var(--accent);
+            border-color: var(--border);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .message-input {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s;
+            background: var(--input-background);
+            color: var(--foreground);
+        }
+
+        .message-input:focus {
+            border-color: var(--ring);
+        }
+
+        .message-input::placeholder {
+            color: var(--muted-foreground);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: none;
+            color: var(--primary-foreground);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 18px;
+        }
+
+        .send-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <button class="icon-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <rect x="2" y="3" width="12" height="2" fill="currentColor"/>
+                    <rect x="2" y="7" width="12" height="2" fill="currentColor"/>
+                    <rect x="2" y="11" width="12" height="2" fill="currentColor"/>
+                </svg>
+            </button>
+            <button class="icon-btn">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="project-label">Project Overview</div>
+        <h1 class="project-title">Apps Suggestion Project</h1>
+
+        <div class="section">
+            <div class="section-title">Top Documents</div>
+            <div class="documents-container">
+                <div class="document-item">
+                    <svg class="document-icon" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 2h7l3 3v9H3V2z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <span>Espresso Milestone Overview.pdf</span>
+                </div>
+                <div class="document-item">
+                    <svg class="document-icon" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 2h7l3 3v9H3V2z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <span>Proactive Suggestions Technical Spec.doc</span>
+                </div>
+                <div class="document-item">
+                    <svg class="document-icon" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 2h7l3 3v9H3V2z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <span>User Context Analysis Report.pdf</span>
+                </div>
+                <div class="document-item">
+                    <svg class="document-icon" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 2h7l3 3v9H3V2z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <span>Browser App Integration Guide.md</span>
+                </div>
+                <div class="document-item">
+                    <svg class="document-icon" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 2h7l3 3v9H3V2z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <span>Q1 2025 Product Roadmap.pdf</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-with-icon">
+                <svg class="section-icon" viewBox="0 0 20 20" fill="none">
+                    <path d="M3 3h14v14H3V3z" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M6 6h8M6 10h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <div>
+                    <div class="section-title">Description</div>
+                    <p class="description-text">This project aims to create an innovative solution for managing and analyzing project data. It includes various features such as real-time collaboration, advanced analytics, and seamless integration with existing tools. Our goal is to revolutionize how teams work together and make data-driven decisions in their daily workflows.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-with-icon">
+                <svg class="section-icon" viewBox="0 0 20 20" fill="none">
+                    <circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M4 17c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <div>
+                    <div class="section-title">Team Members</div>
+                    <div class="team-member">
+                        <div class="team-member-name">Sarah Chen <span class="team-member-role">· Project Lead</span></div>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-member-name">Michael Rodriguez <span class="team-member-role">· Developer</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area">
+        <div class="chat-header">
+            <div class="chat-subtitle">
+                <span class="sparkle-icon">✨</span>
+                Chat with your Projects
+            </div>
+            <h1 class="chat-title">Ask me anything</h1>
+        </div>
+
+        <div class="chat-content">
+            <div class="message-bubble">
+                <span class="message-icon">✨</span>
+                <p class="message-text">Hello! I'm here to help you with your Awesome Project. Last time we talked, we brainstormed some ideas for Proactive Suggestions inside Dia. We can pick up where you left off, or you can ask me anything else about the project!</p>
+            </div>
+        </div>
+
+        <div class="suggestions-section">
+            <div class="suggestions-label">Suggested questions</div>
+            <div class="suggestions-list">
+                <button class="suggestion-btn">Who's working on this project?</button>
+                <button class="suggestion-btn">What's the timeline for this feature?</button>
+                <button class="suggestion-btn">What were our key Proactive Suggestions ideas?</button>
+            </div>
+
+            <div class="input-container">
+                <input
+                    type="text"
+                    class="message-input"
+                    placeholder="Type your message..."
+                />
+                <button class="send-btn">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M18 2L9 11M18 2L12 18L9 11M18 2L2 8L9 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
