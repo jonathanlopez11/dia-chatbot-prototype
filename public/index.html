@@ -1504,8 +1504,9 @@
                     const topicMatch = lastSummary.match(/User asked about (.+?)(?:\.|$)/i);
                     const topic = topicMatch ? topicMatch[1] : lastSummary.substring(0, 60) + '...';
 
-                    // Update greeting to reference last conversation
-                    greetingElement.textContent = `Welcome back! Last time we talked about ${topic}. Want to pick up where we left off, or shall we start something new?`;
+                    // Append continuity message to existing greeting
+                    const defaultGreeting = "Hello! I'm here to help you with the Apps Pod: Espresso Milestone. Ask me anything about the project!";
+                    greetingElement.textContent = `${defaultGreeting} Last time we talked about ${topic}.`;
                 }
             }
         }
