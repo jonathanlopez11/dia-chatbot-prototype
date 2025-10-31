@@ -1780,27 +1780,16 @@
 
         function addUserMessage(text) {
             const chatContent = document.getElementById('chatContent');
-            const messageHtml = `
-                <div class="message-wrapper user">
-                    <div class="message-bubble user">${escapeHtml(text)}</div>
-                </div>
-            `;
-            chatContent.insertAdjacentHTML('beforeend', messageHtml);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message-wrapper user';
+            messageDiv.innerHTML = `<div class="message-bubble user">${escapeHtml(text)}</div>`;
+            chatContent.appendChild(messageDiv);
 
-            // Scroll so the user message appears at the top of the viewport
-            // This makes the response immediately visible as it streams
-            setTimeout(() => {
-                const userMessages = chatContent.querySelectorAll('.message-wrapper.user');
-                const lastUserMessage = userMessages[userMessages.length - 1];
-                if (lastUserMessage) {
-                    // Calculate position to scroll the message to the top
-                    const messageTop = lastUserMessage.offsetTop;
-                    chatContent.scrollTo({
-                        top: messageTop,
-                        behavior: 'smooth'
-                    });
-                }
-            }, 0);
+            // Scroll the message to the top of the viewport
+            messageDiv.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
         }
 
         async function showThinkingStepsAndCallAPI(userInput) {
