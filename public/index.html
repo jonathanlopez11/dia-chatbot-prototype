@@ -1470,8 +1470,26 @@
 
         // Generate initial greeting using LLM
         async function generateInitialGreeting() {
+            const chatContent = document.getElementById('chatContent');
+
+            // Create message wrapper for the initial greeting
+            const uniqueWrapperId = 'greeting-wrapper-' + Date.now();
+            const greetingWrapper = document.createElement('div');
+            greetingWrapper.className = 'message-wrapper assistant';
+            greetingWrapper.id = uniqueWrapperId;
+            greetingWrapper.innerHTML = `
+                <div class="message-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2L15 8.5L22 12L15 15.5L12 22L9 15.5L2 12L9 8.5L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="message-content-wrapper"></div>
+            `;
+            chatContent.appendChild(greetingWrapper);
+
             // Call the API to generate a dynamic greeting
-            await callAnthropicAPIStreaming();
+            await callAnthropicAPIStreaming(greetingWrapper);
+
             // After generating, set flag to false
             isInitialGreeting = false;
         }
