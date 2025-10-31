@@ -1881,10 +1881,15 @@
             console.log('callAnthropicAPIStreaming started');
 
             // Prepare API request with prompt caching
+            // For initial greeting, send a dummy message since API requires at least one
+            const messages = isInitialGreeting
+                ? [{ role: 'user', content: 'Hello' }]
+                : conversationHistory;
+
             const requestBody = {
                 model: 'claude-sonnet-4-5-20250929',
                 max_tokens: 4096,
-                messages: conversationHistory,
+                messages: messages,
                 tools: [
                     {
                         type: "web_search_20250305",
@@ -1894,7 +1899,7 @@
                 ]
             };
 
-            console.log('Request body prepared, messages count:', conversationHistory.length);
+            console.log('Request body prepared, messages count:', messages.length);
 
             // Add extended thinking if enabled
             if (extendedThinkingEnabled) {
@@ -2228,10 +2233,13 @@
             }
 
             // Normal completion - add assistant response to conversation history
-            conversationHistory.push({
-                role: 'assistant',
-                content: fullText
-            });
+            // Skip adding to history if this is the initial greeting
+            if (!isInitialGreeting) {
+                conversationHistory.push({
+                    role: 'assistant',
+                    content: fullText
+                });
+            }
 
             return fullText;
         }
