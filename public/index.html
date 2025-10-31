@@ -1500,13 +1500,18 @@
                     const lastEntry = lastSession.entries[lastSession.entries.length - 1];
                     const lastSummary = lastEntry.summary;
 
-                    // Extract a brief topic from the summary (first 60 characters or up to first period)
+                    // Extract a brief topic from the summary - keep it very concise
                     const topicMatch = lastSummary.match(/User asked about (.+?)(?:\.|$)/i);
-                    const topic = topicMatch ? topicMatch[1] : lastSummary.substring(0, 60) + '...';
+                    let topic = topicMatch ? topicMatch[1] : lastSummary;
 
-                    // Append continuity message to existing greeting
+                    // Keep topic very short (max 40 characters)
+                    if (topic.length > 40) {
+                        topic = topic.substring(0, 40).trim() + '...';
+                    }
+
+                    // Append continuity message to existing greeting with line breaks
                     const defaultGreeting = "Hello! I'm here to help you with the Apps Pod: Espresso Milestone. Ask me anything about the project!";
-                    greetingElement.textContent = `${defaultGreeting} Last time we talked about ${topic}.`;
+                    greetingElement.textContent = `${defaultGreeting}\n\nLast time: ${topic}.\n\nWould you like to pick up where we left off or discuss something else?`;
                 }
             }
         }
