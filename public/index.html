@@ -509,6 +509,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            align-self: flex-start;
         }
 
         .message-avatar svg {
@@ -636,7 +637,7 @@
         }
 
         .suggestions-section {
-            padding: 16px 48px 24px 48px;
+            padding: 12px 48px 16px 48px;
             flex-shrink: 0;
             background: #ffffff;
         }
@@ -650,23 +651,46 @@
 
         .suggestions-list {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             gap: 8px;
-            margin-bottom: 16px;
-            align-items: flex-start;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 4px 0;
+            scrollbar-width: thin;
+            scrollbar-color: #d1d5db transparent;
+        }
+
+        .suggestions-list::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .suggestions-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .suggestions-list::-webkit-scrollbar-thumb {
+            background-color: #d1d5db;
+            border-radius: 3px;
+        }
+
+        .suggestions-list::-webkit-scrollbar-thumb:hover {
+            background-color: #9ca3af;
         }
 
         .suggestion-btn {
             background: var(--background);
             border: 1px solid #e5e7eb;
-            border-radius: 24px;
-            padding: 8px 16px;
+            border-radius: 20px;
+            padding: 6px 12px;
             text-align: left;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             color: #374151;
             transition: all 0.2s;
             font-family: inherit;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .suggestion-btn:hover {
@@ -674,49 +698,208 @@
             border-color: #d1d5db;
         }
 
-        .input-container {
+        .suggestion-shimmer {
+            background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 6px 12px;
+            flex: 1;
+            min-width: 0;
+            font-size: 13px;
+            line-height: 1.5;
             display: flex;
-            gap: 12px;
             align-items: center;
+        }
+
+        .suggestion-shimmer::before {
+            content: '\00A0';
+            visibility: hidden;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .suggestion-btn {
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-container {
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 24px;
-            padding: 8px;
+            padding: 16px;
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
 
         .message-input {
-            flex: 1;
+            width: 100%;
             border: none;
             outline: none;
-            padding: 4px 16px;
-            font-size: 14px;
+            padding: 0 0 8px 0;
+            font-size: 16px;
             font-family: inherit;
             background: transparent;
-            color: var(--foreground);
+            color: #111827;
+            margin-bottom: 8px;
         }
 
         .message-input::placeholder {
-            color: var(--muted-foreground);
+            color: #9ca3af;
         }
 
-        .send-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary);
+        .input-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 44px;
+        }
+
+        .tool-selector {
+            display: inline-flex;
+            align-items: center;
+            background: #f3f4f6;
+            border-radius: 16px;
+            padding: 4px;
+            position: relative;
+            height: 44px;
+        }
+
+        .tool-indicator {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            width: 36px;
+            background: white;
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            transition: left 0.3s ease-out;
+            height: 36px;
+        }
+
+        .tool-indicator.search {
+            left: 4px;
+        }
+
+        .tool-indicator.thinking {
+            left: calc(4px + 40px);
+        }
+
+        .tool-btn {
+            position: relative;
+            z-index: 10;
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            margin: 0;
             border: none;
-            color: var(--primary-foreground);
+            background: transparent;
+            border-radius: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
             flex-shrink: 0;
+            transition: color 0.2s;
         }
 
-        .send-btn:hover {
-            background: #1f2937;
+        .tool-btn svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+            margin: auto;
+        }
+
+        .tool-btn.active {
+            color: #3b82f6;
+        }
+
+        .tool-btn:not(.active) {
+            color: #9ca3af;
+        }
+
+        .input-right-icons {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 44px;
+        }
+
+        .input-icon-btn {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            margin: 0;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            color: #9ca3af;
+        }
+
+        .input-icon-btn:hover:not(:disabled) {
+            background: #f3f4f6;
+            color: #4b5563;
+            transform: scale(1.05);
+        }
+
+        .input-icon-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .input-icon-btn svg {
+            width: 16px;
+            height: 16px;
+            display: block;
+            margin: auto;
+        }
+
+        .send-btn {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            margin: 0;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            color: #9ca3af;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: #f3f4f6;
+            color: #4b5563;
+            transform: scale(1.05);
         }
 
         .send-btn:disabled {
@@ -727,6 +910,8 @@
         .send-btn svg {
             width: 16px;
             height: 16px;
+            display: block;
+            margin: auto;
         }
 
         .thinking-checkbox-label {
@@ -772,8 +957,8 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            font-weight: 400;
-            color: #1f2937;
+            font-weight: 300;
+            color: #374151;
             flex: 1;
             font-size: 15px;
         }
@@ -781,7 +966,7 @@
         .thinking-box-title span {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .thinking-box-meta {
@@ -789,7 +974,7 @@
             align-items: center;
             gap: 8px;
             color: #6b7280;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .thinking-box-toggle {
@@ -823,6 +1008,99 @@
         .hidden {
             display: none;
         }
+
+        /* Markdown styling */
+        .message-bubble.assistant p {
+            margin: 0 0 4px 0;
+        }
+
+        .message-bubble.assistant p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-bubble.assistant ul,
+        .message-bubble.assistant ol {
+            margin: 2px 0 4px 0;
+            padding-left: 24px;
+        }
+
+        .message-bubble.assistant ol {
+            list-style-type: decimal !important;
+            list-style-position: outside !important;
+            counter-reset: item;
+        }
+
+        .message-bubble.assistant ul {
+            list-style-type: disc !important;
+            list-style-position: outside !important;
+        }
+
+        .message-bubble.assistant ol > li {
+            display: list-item !important;
+        }
+
+        .message-bubble.assistant li {
+            margin: 0;
+        }
+
+        .message-bubble.assistant li p {
+            margin: 0;
+            display: inline;
+        }
+
+        .message-bubble.assistant code {
+            background: #f3f3f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 14px;
+        }
+
+        .message-bubble.assistant pre {
+            background: #f3f3f5;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+
+        .message-bubble.assistant pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .message-bubble.assistant strong {
+            font-weight: 600;
+        }
+
+        .message-bubble.assistant em {
+            font-style: italic;
+        }
+
+        .message-bubble.assistant h1,
+        .message-bubble.assistant h2,
+        .message-bubble.assistant h3 {
+            font-weight: 600;
+            margin: 8px 0 4px 0;
+        }
+
+        .message-bubble.assistant h1:first-child,
+        .message-bubble.assistant h2:first-child,
+        .message-bubble.assistant h3:first-child {
+            margin-top: 0;
+        }
+
+        .message-bubble.assistant h1 {
+            font-size: 20px;
+        }
+
+        .message-bubble.assistant h2 {
+            font-size: 18px;
+        }
+
+        .message-bubble.assistant h3 {
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -839,6 +1117,25 @@
 
         <!-- Project Tab Content -->
         <div id="project-tab" class="tab-content active">
+        <div class="section">
+            <div class="section-content">
+                <div class="section-content-title">Project Overview</div>
+                <div class="description-box">
+                    <div class="description-scroll-container">
+                        <div class="description-text" id="descriptionText"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-content">
+                <div class="section-content-title">Key Objectives</div>
+                <div class="objectives-list">
+                </div>
+            </div>
+        </div>
+
         <div class="two-column-grid">
             <div class="section">
                 <div class="section-title">Documents</div>
@@ -859,25 +1156,6 @@
                     <div class="see-more-text" id="seeMoreTeam">
                         See more
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-content">
-                <div class="section-content-title">Project Overview</div>
-                <div class="description-box">
-                    <div class="description-scroll-container">
-                        <div class="description-text" id="descriptionText"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="section-content">
-                <div class="section-content-title">Key Objectives</div>
-                <div class="objectives-list">
                 </div>
             </div>
         </div>
@@ -924,9 +1202,9 @@
             <div id="suggestionsContainer">
                 <div class="suggestions-label">Suggested questions</div>
                 <div class="suggestions-list">
-                    <button class="suggestion-btn" onclick="handleSuggestionClick(this)">What are the goals of the Meetings workstream?</button>
-                    <button class="suggestion-btn" onclick="handleSuggestionClick(this)">How does Proactive Suggestions work?</button>
-                    <button class="suggestion-btn" onclick="handleSuggestionClick(this)">Who's on the Apps Pod team?</button>
+                    <div class="suggestion-shimmer"></div>
+                    <div class="suggestion-shimmer"></div>
+                    <div class="suggestion-shimmer"></div>
                 </div>
             </div>
 
@@ -935,27 +1213,151 @@
                     type="text"
                     class="message-input"
                     id="messageInput"
-                    placeholder="Type your message..."
+                    placeholder=""
                     onkeypress="handleKeyPress(event)"
                 />
-                <label class="thinking-checkbox-label">
-                    <input
-                        type="checkbox"
-                        id="thinkingCheckbox"
-                        onchange="extendedThinkingEnabled = this.checked"
-                    />
-                    <span>Extended thinking</span>
-                </label>
-                <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
+
+                <div class="input-controls">
+                    <div class="tool-selector">
+                        <div class="tool-indicator search" id="toolIndicator"></div>
+
+                        <button class="tool-btn active" id="searchBtn" onclick="selectTool('search')" title="Normal">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                        </button>
+                        <button class="tool-btn" id="thinkingBtn" onclick="selectTool('thinking')" title="Extended thinking">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="input-right-icons">
+                        <button class="input-icon-btn" title="Link" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                            </svg>
+                        </button>
+                        <button class="input-icon-btn" title="Attach" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                            </svg>
+                        </button>
+                        <button class="input-icon-btn" title="Voice" disabled>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"></path>
+                            </svg>
+                        </button>
+                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 19V5M5 12l7-7 7 7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        // Simple markdown parser
+        function parseMarkdown(text) {
+            console.log('=== PARSING MARKDOWN ===');
+            console.log('Raw text:', text);
+
+            // Escape HTML first
+            let html = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+
+            // Split into blocks
+            const blocks = html.split(/\n\n+/);
+            const result = [];
+
+            // Group consecutive numbered items together
+            let i = 0;
+            while (i < blocks.length) {
+                let block = blocks[i].trim();
+                if (!block) {
+                    i++;
+                    continue;
+                }
+
+                // Check if this is a numbered list item
+                if (block.match(/^\d+\. /)) {
+                    // Collect all consecutive numbered items
+                    const listItems = [];
+                    while (i < blocks.length && blocks[i].trim().match(/^\d+\. /)) {
+                        listItems.push(blocks[i].trim());
+                        i++;
+                    }
+                    // Process as a single ordered list
+                    console.log('Detected consecutive ordered list items:', listItems);
+                    const listHtml = listItems.map(item => {
+                        let content = item.replace(/^\d+\. /, '').trim();
+                        content = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                        content = content.replace(/\*(.+?)\*/g, '<em>$1</em>');
+                        content = content.replace(/`(.+?)`/g, '<code>$1</code>');
+                        return `<li>${content}</li>`;
+                    }).join('');
+                    const olHtml = `<ol>${listHtml}</ol>`;
+                    console.log('Generated combined OL HTML:', olHtml);
+                    result.push(olHtml);
+                    continue;
+                }
+
+                // Code blocks
+                if (block.startsWith('```')) {
+                    const code = block.replace(/```/g, '').trim();
+                    result.push(`<pre><code>${code}</code></pre>`);
+                }
+                // Headers
+                else if (block.startsWith('### ')) {
+                    result.push(`<h3>${block.substring(4)}</h3>`);
+                }
+                else if (block.startsWith('## ')) {
+                    result.push(`<h2>${block.substring(3)}</h2>`);
+                }
+                else if (block.startsWith('# ')) {
+                    result.push(`<h1>${block.substring(2)}</h1>`);
+                }
+                // Unordered list
+                else if (block.match(/^- /m)) {
+                    const items = block.split('\n').filter(line => line.trim().startsWith('- '));
+                    const listHtml = items.map(item => {
+                        let content = item.substring(2).trim();
+                        // Apply inline formatting to list items
+                        content = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                        content = content.replace(/\*(.+?)\*/g, '<em>$1</em>');
+                        content = content.replace(/`(.+?)`/g, '<code>$1</code>');
+                        return `<li>${content}</li>`;
+                    }).join('');
+                    result.push(`<ul>${listHtml}</ul>`);
+                }
+                // Paragraph
+                else {
+                    // Apply inline formatting
+                    let para = block.replace(/\n/g, ' ');
+                    // Bold
+                    para = para.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                    // Italic (make sure it doesn't match ** first)
+                    para = para.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+                    // Inline code
+                    para = para.replace(/`(.+?)`/g, '<code>$1</code>');
+                    result.push(`<p>${para}</p>`);
+                }
+
+                i++;
+            }
+
+            return result.join('');
+        }
+
         let hasUserSentMessage = false;
         let conversationHistory = [];
         let projectContext = null;
@@ -968,6 +1370,8 @@
                 projectContext = data;
                 console.log('Project context loaded:', projectContext.projectTitle);
                 populateSidebar(projectContext);
+                // Generate initial suggestions
+                updateSuggestions();
             })
             .catch(error => console.error('Error loading project context:', error));
 
@@ -1147,22 +1551,6 @@
             setupSeeMore();
         }
 
-        const THINKING_STEPS = [
-            "Thinking...",
-            "Searching your project",
-            "Opening relevant documents",
-            "Pulling in relevant context",
-            "Searching the web",
-            "Doing additional research",
-            "Pulling it all together",
-        ];
-
-        function getRandomSteps() {
-            const shuffled = [...THINKING_STEPS].sort(() => Math.random() - 0.5);
-
-            // Pick 3 random steps (or fewer if not enough available)
-            return shuffled.slice(0, 3);
-        }
 
         function handleKeyPress(event) {
             if (event.key === 'Enter' && !event.shiftKey) {
@@ -1177,17 +1565,32 @@
             sendMessage();
         }
 
+        let selectedTool = 'search';
+
+        function selectTool(tool) {
+            selectedTool = tool;
+            const indicator = document.getElementById('toolIndicator');
+            const searchBtn = document.getElementById('searchBtn');
+            const thinkingBtn = document.getElementById('thinkingBtn');
+
+            // Update indicator position
+            indicator.className = 'tool-indicator ' + tool;
+
+            // Update button active states
+            searchBtn.classList.toggle('active', tool === 'search');
+            thinkingBtn.classList.toggle('active', tool === 'thinking');
+
+            // Update extended thinking setting
+            extendedThinkingEnabled = (tool === 'thinking');
+        }
+
         async function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
 
             if (!message) return;
 
-            // Hide suggestions after first message
-            if (!hasUserSentMessage) {
-                hasUserSentMessage = true;
-                document.getElementById('suggestionsContainer').style.display = 'none';
-            }
+            hasUserSentMessage = true;
 
             // Add user message to conversation
             conversationHistory.push({
@@ -1203,9 +1606,11 @@
             input.disabled = true;
             document.getElementById('sendBtn').disabled = true;
 
-            // Show thinking steps and get real response from API
-            const steps = getRandomSteps();
-            await showThinkingStepsAndCallAPI(steps, message);
+            // Get real response from API
+            await showThinkingStepsAndCallAPI(message);
+
+            // Generate new suggestions after response
+            await updateSuggestions();
 
             // Re-enable input
             input.disabled = false;
@@ -1224,12 +1629,11 @@
             scrollToBottom();
         }
 
-        async function showThinkingStepsAndCallAPI(steps, userInput) {
+        async function showThinkingStepsAndCallAPI(userInput) {
             const chatContent = document.getElementById('chatContent');
 
-            // Create thinking wrapper with unique IDs
+            // Create message wrapper for the assistant response
             const uniqueWrapperId = 'thinking-wrapper-' + Date.now();
-            const uniqueStepsId = 'thinking-steps-' + Date.now();
             const thinkingWrapper = document.createElement('div');
             thinkingWrapper.className = 'message-wrapper assistant';
             thinkingWrapper.id = uniqueWrapperId;
@@ -1239,100 +1643,22 @@
                         <path d="M12 2L15 8.5L22 12L15 15.5L12 22L9 15.5L2 12L9 8.5L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <div class="message-content-wrapper">
-                    <div class="thinking-steps" id="${uniqueStepsId}"></div>
-                </div>
+                <div class="message-content-wrapper"></div>
             `;
             chatContent.appendChild(thinkingWrapper);
 
-            const thinkingStepsContainer = document.getElementById(uniqueStepsId);
-
-            // Animate thinking steps while calling API
-            let stepIndex = 0;
-            const stepInterval = setInterval(() => {
-                if (stepIndex < steps.length) {
-                    const currentStepId = 'step-' + Date.now() + '-' + stepIndex;
-                    const stepHtml = `
-                        <div class="thinking-step" id="${currentStepId}">
-                            <div class="thinking-step-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <span class="thinking-step-text">${steps[stepIndex]}</span>
-                        </div>
-                    `;
-                    thinkingStepsContainer.insertAdjacentHTML('beforeend', stepHtml);
-
-                    // Add animation after a small delay
-                    setTimeout(() => {
-                        const stepElement = document.getElementById(currentStepId);
-                        if (stepElement) {
-                            const icon = stepElement.querySelector('.thinking-step-icon');
-                            if (icon) {
-                                icon.classList.add('filled');
-                            }
-                        }
-                    }, 50);
-
-                    scrollToBottom();
-                    stepIndex++;
-                }
-            }, 400);
-
-            // Call real API with streaming
+            // Call API with streaming
             try {
-                await callAnthropicAPIStreaming(steps, stepInterval, stepIndex, thinkingWrapper, thinkingStepsContainer);
-
-                clearInterval(stepInterval);
-
-                // Ensure all steps are shown
-                while (stepIndex < steps.length) {
-                    const stepHtml = `
-                        <div class="thinking-step">
-                            <div class="thinking-step-icon filled">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                    <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            <span class="thinking-step-text">${steps[stepIndex]}</span>
-                        </div>
-                    `;
-                    thinkingStepsContainer.insertAdjacentHTML('beforeend', stepHtml);
-                    stepIndex++;
-                }
-
+                await callAnthropicAPIStreaming(thinkingWrapper);
             } catch (error) {
-                clearInterval(stepInterval);
                 thinkingWrapper.remove();
-                addAssistantMessageError('Sorry, I encountered an error. Please try again.', steps);
+                addAssistantMessageError('Sorry, I encountered an error. Please try again.');
                 console.error('API Error:', error);
             }
         }
 
-        function addAssistantMessageError(text, thinkingSteps) {
+        function addAssistantMessageError(text) {
             const chatContent = document.getElementById('chatContent');
-
-            // Build thinking steps HTML
-            const stepsHtml = thinkingSteps.map(step => `
-                <div class="thinking-step">
-                    <div class="thinking-step-icon filled">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <span class="thinking-step-text">${step}</span>
-                </div>
-            `).join('');
-
-            // Determine sources based on steps
-            const sources = getSources(thinkingSteps);
-            const sourcesHtml = sources.map(source => `
-                <div class="source-badge">
-                    ${source.icon}
-                    <span class="source-badge-text">${source.label} (${source.count})</span>
-                </div>
-            `).join('');
 
             const messageHtml = `
                 <div class="message-wrapper assistant">
@@ -1342,12 +1668,7 @@
                         </svg>
                     </div>
                     <div class="message-content-wrapper">
-                        <div class="thinking-steps">${stepsHtml}</div>
                         <div class="message-bubble assistant">${escapeHtml(text)}</div>
-                        <div class="message-sources">
-                            <span class="sources-label">Sources:</span>
-                            <div class="sources-list">${sourcesHtml}</div>
-                        </div>
                     </div>
                 </div>
             `;
@@ -1355,48 +1676,7 @@
             scrollToBottom();
         }
 
-        function getSources(steps) {
-            const sources = [];
-            const icons = {
-                project: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                documents: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-                web: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" stroke-width="2"/></svg>',
-                research: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2a3 3 0 00-3 3v7a3 3 0 006 0V5a3 3 0 00-3-3z" stroke-width="2"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8" stroke-width="2" stroke-linecap="round"/></svg>'
-            };
-
-            steps.forEach(step => {
-                const lowerStep = step.toLowerCase();
-                if (lowerStep.includes('project') && !sources.find(s => s.label === 'Project')) {
-                    sources.push({ icon: icons.project, label: 'Project', count: 12 });
-                }
-                if (lowerStep.includes('documents') && !sources.find(s => s.label === 'Documents')) {
-                    sources.push({ icon: icons.documents, label: 'Documents', count: 8 });
-                }
-                if (lowerStep.includes('web') && !sources.find(s => s.label === 'Web')) {
-                    sources.push({ icon: icons.web, label: 'Web', count: 5 });
-                }
-                if (lowerStep.includes('research') && !sources.find(s => s.label === 'Research')) {
-                    sources.push({ icon: icons.research, label: 'Research', count: 6 });
-                }
-            });
-
-            // Ensure at least 3 sources
-            if (sources.length < 3) {
-                if (!sources.find(s => s.label === 'Project')) {
-                    sources.push({ icon: icons.project, label: 'Project', count: 12 });
-                }
-                if (sources.length < 3 && !sources.find(s => s.label === 'Documents')) {
-                    sources.push({ icon: icons.documents, label: 'Documents', count: 8 });
-                }
-                if (sources.length < 3 && !sources.find(s => s.label === 'Research')) {
-                    sources.push({ icon: icons.research, label: 'Research', count: 6 });
-                }
-            }
-
-            return sources.slice(0, 3);
-        }
-
-        async function callAnthropicAPIStreaming(steps, stepInterval, stepIndex, thinkingWrapper, thinkingStepsContainer) {
+        async function callAnthropicAPIStreaming(thinkingWrapper) {
             // Prepare API request with prompt caching
             const requestBody = {
                 model: 'claude-sonnet-4-5-20250929',
@@ -1428,7 +1708,7 @@
                 requestBody.system = [
                     {
                         type: 'text',
-                        text: projectContext.contextForAI + '\n\nIMPORTANT: Format your responses for maximum readability using plain text structure:\n\n- Use single line breaks between sentences and paragraphs\n- Start lists on a new line with "- " for each item\n- For numbered sequences, use "1. ", "2. ", etc.\n- Keep paragraphs focused (2-4 sentences) before moving to the next idea\n- Do not use markdown syntax like **, __, `, #, etc.\n- Write naturally but structure content clearly\n\nWEB SEARCH TOOL:\nYou have access to a web_search tool. Use it when:\n- The user asks about current events, news, or recent information\n- Questions require real-time data (stock prices, weather, sports scores, etc.)\n- You need to verify or find information not in your training data\n- The user explicitly asks you to search the web or look something up\n- Questions about recent product releases, API documentation, or technology updates\n- Any query where fresh, external information would significantly improve your answer\n\nDo NOT use web search for:\n- Questions you can confidently answer from your existing knowledge\n- Questions about the provided project context\n- General knowledge that doesn\'t require current information',
+                        text: projectContext.contextForAI + '\n\nIMPORTANT: Format your responses using markdown for maximum readability:\n\n- Write in flowing paragraphs with complete sentences\n- Use bullet points (- ) or numbered lists (1. ) when presenting multiple items\n- Use `code` formatting for technical terms, file names, or commands\n- Use code blocks (```) for multi-line code snippets\n- Use line breaks to separate distinct topics or sections\n- Write conversationally and naturally\n\nBOLDING GUIDELINES:\nUse **bold** formatting sparingly and purposefully to enhance readability, not as default styling.\n\nWhen to bold:\n- Key terms or concepts when first introduced in technical explanations\n- Critical warnings, important caveats, or safety information\n- Specific answers to direct questions (e.g., "The capital is **Paris**")\n- Section transitions in longer responses where prose alone isn\'t sufficient for navigation\n\nWhen NOT to bold:\n- In casual conversation or chat - almost never\n- For emphasis in emotional or empathetic responses - rely on word choice instead\n- Repeatedly throughout a response - one or two strategic bolds maximum in most cases\n- In lists or structured content where formatting already provides visual hierarchy\n- As a substitute for clear writing - don\'t bold to compensate for unclear prose\n\nGuardrails:\n- Maximum 2-3 bolded phrases per response in typical cases\n- Never bold entire sentences unless absolutely critical (like safety warnings)\n- Avoid bolding in consecutive sentences - space it out\n- Don\'t bold common words or phrases people already understand\n- Skip bolding entirely in responses under 3-4 sentences\n\nTest: Before bolding, ask "Would this response be unclear without the bold?" If no, don\'t bold it.\nThe default should be no bolding. Add it only when its absence would genuinely reduce clarity or cause the reader to miss something important.\n\nWEB SEARCH TOOL:\nYou have access to a web_search tool. Use it proactively and liberally for:\n- Current events, news, or recent information\n- Real-time data (stock prices, weather, sports scores, etc.)\n- Industry best practices and how other companies approach problems\n- Research topics where external examples would enrich your answer\n- Recent product releases, API documentation, or technology updates\n- Questions about team organization, processes, or methodologies at other companies\n- Any topic where additional research, examples, or data points would provide more comprehensive answers\n- Verifying or supplementing information even if you have some knowledge about it\n\nBe proactive: Even if you know something about a topic, use web search when external research would make your answer more helpful, current, or well-rounded. The user values thorough research over quick responses.\n\nDo NOT use web search for:\n- Questions specifically about the provided project context\n- Simple definitions or explanations you can confidently provide',
                         cache_control: { type: 'ephemeral' }
                     }
                 ];
@@ -1447,25 +1727,11 @@
                 throw new Error(`API error: ${response.status}`);
             }
 
-            // Transform the thinking wrapper into the streaming message
-            const sources = getSources(steps);
+            // Add message bubble to the existing thinking wrapper
             const uniqueId = 'streaming-' + Date.now();
-
-            const sourcesHtml = sources.map(source => `
-                <div class="source-badge">
-                    ${source.icon}
-                    <span class="source-badge-text">${source.label} (${source.count})</span>
-                </div>
-            `).join('');
-
-            // Add message bubble and sources to the existing thinking wrapper
             const contentWrapper = thinkingWrapper.querySelector('.message-content-wrapper');
             contentWrapper.insertAdjacentHTML('beforeend', `
                 <div class="message-bubble assistant" id="${uniqueId}"></div>
-                <div class="message-sources">
-                    <span class="sources-label">Sources:</span>
-                    <div class="sources-list">${sourcesHtml}</div>
-                </div>
             `);
 
             const streamingTextElement = document.getElementById(uniqueId);
@@ -1498,7 +1764,7 @@
                     const remaining = fullText.substring(displayText.length);
                     const nextChunk = remaining.substring(0, Math.max(1, Math.ceil(remaining.length * 0.3)));
                     displayText += nextChunk;
-                    streamingTextElement.textContent = displayText;
+                    streamingTextElement.innerHTML = parseMarkdown(displayText);
                     scrollToBottom();
 
                     if (displayText !== fullText) {
@@ -1560,12 +1826,14 @@
                                     console.log('Started text block');
                                 } else if (event.content_block?.type === 'server_tool_use') {
                                     console.log('Server tool use started:', event.content_block.name, 'ID:', event.content_block.id);
+                                    console.log('Full content_block:', JSON.stringify(event.content_block, null, 2));
                                     currentToolUseId = event.content_block.id;
 
                                     // Create a box for the web search tool
                                     if (event.content_block.name === 'web_search') {
                                         const toolBoxId = 'tool-' + currentToolUseId;
                                         const searchQuery = event.content_block.input?.query || 'Searching...';
+                                        console.log('Search query extracted:', searchQuery);
                                         const toolBoxHtml = `
                                             <div class="thinking-box" id="${toolBoxId}">
                                                 <div class="thinking-box-header" onclick="toggleThinkingBox(event)">
@@ -1581,9 +1849,6 @@
                                             </div>
                                         `;
                                         blocksContainer.insertAdjacentHTML('beforeend', toolBoxHtml);
-
-                                        // Also add the thinking step indicator
-                                        addThinkingStep('Searching the web...', thinkingStepsContainer);
                                     }
                                 } else if (event.content_block?.type === 'web_search_tool_result') {
                                     console.log('Web search results received:', event.content_block.content?.length, 'results');
@@ -1645,18 +1910,25 @@
 
                                 // Handle tool input (for web search query)
                                 if (event.delta?.type === 'input_json_delta' && event.delta?.partial_json) {
+                                    console.log('Received input_json_delta:', event.delta.partial_json);
                                     if (!toolInputJson[event.index]) {
                                         toolInputJson[event.index] = '';
                                     }
                                     toolInputJson[event.index] += event.delta.partial_json;
 
-                                    // Try to parse and display the search query
+                                    // Try to parse and update the search query in the title
                                     try {
                                         const input = JSON.parse(toolInputJson[event.index]);
+                                        console.log('Parsed input:', input);
                                         if (input.query && currentToolUseId) {
-                                            const toolContentEl = document.getElementById('tool-' + currentToolUseId + '-content');
-                                            if (toolContentEl) {
-                                                toolContentEl.textContent = `Search query: "${input.query}"`;
+                                            // Update the title to show the actual search query
+                                            const toolBox = document.getElementById('tool-' + currentToolUseId);
+                                            if (toolBox) {
+                                                const titleSpan = toolBox.querySelector('.thinking-box-title span');
+                                                if (titleSpan) {
+                                                    titleSpan.textContent = `🌐 ${input.query}`;
+                                                    console.log('Updated search query title to:', input.query);
+                                                }
                                             }
                                         }
                                     } catch (e) {
@@ -1684,7 +1956,7 @@
 
             // Ensure final text is displayed
             displayText = fullText;
-            streamingTextElement.textContent = fullText;
+            streamingTextElement.innerHTML = parseMarkdown(fullText);
 
             // Ensure final thinking text is displayed
             if (thinkingElement && thinkingText) {
@@ -1734,6 +2006,72 @@
             // Add active class to selected tab and content
             event.target.classList.add('active');
             document.getElementById(tabName + '-tab').classList.add('active');
+        }
+
+        async function updateSuggestions() {
+            const suggestionsContainer = document.getElementById('suggestionsContainer');
+            const suggestionsList = suggestionsContainer.querySelector('.suggestions-list');
+
+            // Show shimmer loading states (3 placeholders)
+            suggestionsList.innerHTML = `
+                <div class="suggestion-shimmer"></div>
+                <div class="suggestion-shimmer"></div>
+                <div class="suggestion-shimmer"></div>
+            `;
+            suggestionsContainer.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/suggestions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        conversationHistory: conversationHistory,
+                        projectContext: projectContext.contextForAI
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate suggestions');
+                }
+
+                const data = await response.json();
+
+                // Clear shimmer states
+                suggestionsList.innerHTML = '';
+
+                // Add suggestions one by one with delay
+                data.suggestions.forEach((suggestion, index) => {
+                    setTimeout(() => {
+                        const btn = document.createElement('button');
+                        btn.className = 'suggestion-btn';
+                        btn.onclick = function() { handleSuggestionClick(this); };
+                        btn.textContent = suggestion;
+                        suggestionsList.appendChild(btn);
+                    }, index * 150); // 150ms delay between each
+                });
+
+            } catch (error) {
+                console.error('Error generating suggestions:', error);
+                // Fallback to generic suggestions on error
+                suggestionsList.innerHTML = '';
+                const fallbackSuggestions = [
+                    "Tell me more about that",
+                    "What are the next steps?",
+                    "Can you elaborate?"
+                ];
+
+                fallbackSuggestions.forEach((suggestion, index) => {
+                    setTimeout(() => {
+                        const btn = document.createElement('button');
+                        btn.className = 'suggestion-btn';
+                        btn.onclick = function() { handleSuggestionClick(this); };
+                        btn.textContent = suggestion;
+                        suggestionsList.appendChild(btn);
+                    }, index * 150);
+                });
+            }
         }
     </script>
 </body>
