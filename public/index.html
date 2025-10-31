@@ -1176,6 +1176,7 @@
         <!-- Tabs -->
         <div class="sidebar-tabs">
             <button class="sidebar-tab active" onclick="switchTab(event, 'project')">Project</button>
+            <button class="sidebar-tab" onclick="switchTab(event, 'user')">User Profile</button>
             <button class="sidebar-tab" onclick="switchTab(event, 'conversation')">Conversation Log</button>
         </div>
 
@@ -1223,6 +1224,31 @@
                 </div>
             </div>
         </div>
+        </div>
+
+        <!-- User Profile Tab Content -->
+        <div id="user-tab" class="tab-content">
+            <div class="section">
+                <div class="section-content">
+                    <div class="section-content-title">User Profile</div>
+                    <div class="description-box">
+                        <div class="description-scroll-container">
+                            <div class="description-text" id="userProfileText"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-content">
+                    <div class="section-content-title">Company Overview</div>
+                    <div class="description-box">
+                        <div class="description-scroll-container">
+                            <div class="description-text" id="companyOverviewText"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Conversation Log Tab Content -->
@@ -1542,6 +1568,18 @@
                         `;
                     }
                 }).join('');
+            }
+
+            // Populate User Profile tab
+            if (context.userMemory) {
+                const userProfileText = document.getElementById('userProfileText');
+                if (userProfileText && context.userMemory.userProfile) {
+                    userProfileText.innerHTML = `<div class="description-section"><div>${context.userMemory.userProfile}</div></div>`;
+                }
+                const companyOverviewText = document.getElementById('companyOverviewText');
+                if (companyOverviewText && context.userMemory.companyOverview) {
+                    companyOverviewText.innerHTML = `<div class="description-section"><div>${context.userMemory.companyOverview}</div></div>`;
+                }
             }
 
             // Setup see more functionality after content is loaded
