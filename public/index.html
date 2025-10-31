@@ -1418,6 +1418,13 @@
         // Handle memory tool operations
         async function handleMemoryOperation(operation, input) {
             try {
+                // Block read operations - only allow writes
+                if (operation === 'view') {
+                    return {
+                        error: 'Read operations not allowed. You can only write to memory (create, str_replace, insert).'
+                    };
+                }
+
                 initMemoryStorage();
                 const memories = loadMemories();
 
@@ -1949,6 +1956,10 @@
                         type: "web_search_20250305",
                         name: "web_search",
                         max_uses: 5
+                    },
+                    {
+                        type: "memory_20250818",
+                        name: "memory"
                     }
                 ]
             };
@@ -1975,6 +1986,19 @@
             }
 
             systemText += 'You are Dia, an AI assistant created by Anthropic. You should respond in a conversational, helpful manner using plain text only, as the interface cannot render markdown.';
+
+            // Add memory tool instructions - WRITE ONLY
+            systemText += '\n\n## MEMORY (WRITE-ONLY)\n\n';
+            systemText += 'CRITICAL RULES:\n';
+            systemText += '1. You MUST provide your complete text response FIRST, then optionally use memory\n';
+            systemText += '2. You can ONLY WRITE to memory - NEVER read/view\n';
+            systemText += '3. Only use these commands: create, str_replace, insert\n';
+            systemText += '4. NEVER use the "view" command - it will fail\n\n';
+            systemText += 'When to write to memory:\n';
+            systemText += '- After significant conversations where the user shared important context\n';
+            systemText += '- Store user preferences, project details, or important decisions\n';
+            systemText += '- Use /memories/context.txt for general user context\n';
+            systemText += '- Keep entries concise and factual';
 
             requestBody.system = [
                 {
