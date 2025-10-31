@@ -1787,13 +1787,20 @@
             `;
             chatContent.insertAdjacentHTML('beforeend', messageHtml);
 
-            // Scroll so the user message appears at the top, making room for the response
-            const userMessages = chatContent.querySelectorAll('.message-wrapper.user');
-            const lastUserMessage = userMessages[userMessages.length - 1];
-            if (lastUserMessage) {
-                // Use scrollIntoView with alignment to top
-                lastUserMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            // Scroll so the user message appears at the top of the viewport
+            // This makes the response immediately visible as it streams
+            setTimeout(() => {
+                const userMessages = chatContent.querySelectorAll('.message-wrapper.user');
+                const lastUserMessage = userMessages[userMessages.length - 1];
+                if (lastUserMessage) {
+                    // Calculate position to scroll the message to the top
+                    const messageTop = lastUserMessage.offsetTop;
+                    chatContent.scrollTo({
+                        top: messageTop,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 0);
         }
 
         async function showThinkingStepsAndCallAPI(userInput) {
