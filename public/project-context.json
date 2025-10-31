@@ -40,11 +40,9 @@
     { "name": "Tara Feener", "role": "Eng Leadership" }
   ],
   "keyObjectives": [
-    "Build robust app platform: Core infrastructure for deep app integration",
-    "Make apps discoverable: Surface relevant apps at the right moments",
-    "Enable seamless interactions: Native-feeling app invocation and data access",
-    "Bridge cross-tool workflows: Connect tasks across multiple SaaS products",
-    "Scale the ecosystem: Sustainable growth with quality and trust"
+    "Make apps feel native to the browser: Apps respond to context rather than waiting to be invoked",
+    "Reduce tool-switching friction: Bring app functionality into the browser environment where work happens",
+    "Establish foundational patterns: Define integration depth, triggering logic, and quality standards that scale the ecosystem"
   ],
   "userMemory": {
     "userProfile": "The user's name is Alexandra Medway. She is a 30 years old female that lives in New York City. She is originally from New York. She's been working at The Browser Company since it started in 2020 and joined as the second engineer. She is now an Engineering Manager and is a Pod Lead for the Apps Pod.",
