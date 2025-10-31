@@ -70,6 +70,65 @@
             padding: 48px 16px 48px 16px;
             overflow-y: auto;
             border-right: 1px solid var(--sidebar-border);
+            transition: transform 0.3s ease, width 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.hidden {
+            transform: translateX(-100%);
+            width: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .sidebar-close-btn:hover {
+            background: #f3f4f6;
+            color: var(--foreground);
+        }
+
+        .sidebar-open-btn {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #6b7280;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .sidebar-open-btn.visible {
+            display: flex;
+        }
+
+        .sidebar-open-btn:hover {
+            background: #f9fafb;
+            color: var(--foreground);
         }
 
         .sidebar-header {
@@ -241,6 +300,10 @@
             padding-right: 8px;
         }
 
+        .description-scroll-container.has-scroll {
+            padding-bottom: 20px;
+        }
+
         .description-box::after {
             content: '';
             position: absolute;
@@ -251,6 +314,11 @@
             background: linear-gradient(to bottom, rgba(249,250,251,0), rgba(249,250,251,0.95) 70%, rgba(249,250,251,1));
             pointer-events: none;
             border-radius: 0 0 var(--radius) var(--radius);
+            display: none;
+        }
+
+        .description-box.has-scroll::after {
+            display: block;
         }
 
         .description-scroll-container::-webkit-scrollbar {
@@ -590,6 +658,7 @@
 
         .message-bubble.assistant {
             color: #000000;
+            margin-top: -8px;
         }
 
         .message-sources {
@@ -682,7 +751,7 @@
             background: var(--background);
             border: 1px solid #e5e7eb;
             border-radius: 20px;
-            padding: 6px 12px;
+            padding: 8px 16px;
             text-align: left;
             cursor: pointer;
             font-size: 13px;
@@ -704,13 +773,13 @@
             animation: shimmer 1.5s infinite;
             border: 1px solid #e5e7eb;
             border-radius: 20px;
-            padding: 6px 12px;
-            flex: 1;
-            min-width: 0;
+            padding: 8px 16px;
+            width: 150px;
             font-size: 13px;
             line-height: 1.5;
             display: flex;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .suggestion-shimmer::before {
@@ -1009,65 +1078,6 @@
             display: none;
         }
 
-        /* Markdown styling */
-        .message-bubble.assistant p {
-            margin: 0 0 4px 0;
-        }
-
-        .message-bubble.assistant p:last-child {
-            margin-bottom: 0;
-        }
-
-        .message-bubble.assistant ul,
-        .message-bubble.assistant ol {
-            margin: 2px 0 4px 0;
-            padding-left: 24px;
-        }
-
-        .message-bubble.assistant ol {
-            list-style-type: decimal !important;
-            list-style-position: outside !important;
-            counter-reset: item;
-        }
-
-        .message-bubble.assistant ul {
-            list-style-type: disc !important;
-            list-style-position: outside !important;
-        }
-
-        .message-bubble.assistant ol > li {
-            display: list-item !important;
-        }
-
-        .message-bubble.assistant li {
-            margin: 0;
-        }
-
-        .message-bubble.assistant li p {
-            margin: 0;
-            display: inline;
-        }
-
-        .message-bubble.assistant code {
-            background: #f3f3f5;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'SF Mono', Monaco, monospace;
-            font-size: 14px;
-        }
-
-        .message-bubble.assistant pre {
-            background: #f3f3f5;
-            padding: 12px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 8px 0;
-        }
-
-        .message-bubble.assistant pre code {
-            background: none;
-            padding: 0;
-        }
 
         .message-bubble.assistant strong {
             font-weight: 600;
@@ -1101,18 +1111,73 @@
         .message-bubble.assistant h3 {
             font-size: 16px;
         }
+
+        /* Session cards for Conversation Log */
+        .session-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            transition: background 0.2s;
+        }
+
+        .session-card:hover {
+            background: #f3f4f6;
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .session-date {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--foreground);
+        }
+
+        .session-meta {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .session-summary {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #6b7280;
+        }
     </style>
 </head>
 <body>
+    <!-- Open Sidebar Button (shows when sidebar is hidden) -->
+    <button class="sidebar-open-btn" onclick="toggleSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+        </svg>
+    </button>
+
     <!-- Sidebar -->
     <div class="sidebar">
+        <!-- Close Button -->
+        <button class="sidebar-close-btn" onclick="toggleSidebar()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+            </svg>
+        </button>
+
         <h1 class="project-label"></h1>
         <h2 class="project-title"></h2>
 
         <!-- Tabs -->
         <div class="sidebar-tabs">
-            <button class="sidebar-tab active" onclick="switchTab('project')">Project</button>
-            <button class="sidebar-tab" onclick="switchTab('memory')">User Memory</button>
+            <button class="sidebar-tab active" onclick="switchTab(event, 'project')">Project</button>
+            <button class="sidebar-tab" onclick="switchTab(event, 'memory')">User Memory</button>
+            <button class="sidebar-tab" onclick="switchTab(event, 'conversation')">Conversation Log</button>
         </div>
 
         <!-- Project Tab Content -->
@@ -1165,7 +1230,39 @@
         <div id="memory-tab" class="tab-content">
             <div class="section">
                 <div class="section-content">
-                    <p style="color: #6b7280; font-size: 14px;">User memory content will appear here...</p>
+                    <div class="section-content-title">User Profile</div>
+                    <div class="description-box">
+                        <div class="description-scroll-container">
+                            <div class="description-text" id="userProfileText"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-content">
+                    <div class="section-content-title">Company Overview</div>
+                    <div class="description-box">
+                        <div class="description-scroll-container">
+                            <div class="description-text" id="companyOverviewText"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversation Log Tab Content -->
+        <div id="conversation-tab" class="tab-content">
+            <div class="section">
+                <div class="section-content">
+                    <div class="section-content-title">Conversation History</div>
+                    <div class="description-box">
+                        <div class="description-scroll-container">
+                            <div class="description-text" id="conversationLogText">
+                                <p style="color: #9ca3af; font-size: 13px;">No conversations yet. Start chatting to see your conversation history here.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1202,9 +1299,9 @@
             <div id="suggestionsContainer">
                 <div class="suggestions-label">Suggested questions</div>
                 <div class="suggestions-list">
-                    <div class="suggestion-shimmer"></div>
-                    <div class="suggestion-shimmer"></div>
-                    <div class="suggestion-shimmer"></div>
+                    <button class="suggestion-btn" onclick="handleSuggestionClick(this)">What should I prepare for the next sprint planning?</button>
+                    <button class="suggestion-btn" onclick="handleSuggestionClick(this)">What are the biggest risks for our Espresso milestone?</button>
+                    <button class="suggestion-btn" onclick="handleSuggestionClick(this)">How should we evaluate if our proactive suggestions are helpful?</button>
                 </div>
             </div>
 
@@ -1264,104 +1361,167 @@
     </div>
 
     <script>
-        // Simple markdown parser
-        function parseMarkdown(text) {
-            console.log('=== PARSING MARKDOWN ===');
-            console.log('Raw text:', text);
-
-            // Escape HTML first
-            let html = text
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-
-            // Split into blocks
-            const blocks = html.split(/\n\n+/);
-            const result = [];
-
-            // Group consecutive numbered items together
-            let i = 0;
-            while (i < blocks.length) {
-                let block = blocks[i].trim();
-                if (!block) {
-                    i++;
-                    continue;
-                }
-
-                // Check if this is a numbered list item
-                if (block.match(/^\d+\. /)) {
-                    // Collect all consecutive numbered items
-                    const listItems = [];
-                    while (i < blocks.length && blocks[i].trim().match(/^\d+\. /)) {
-                        listItems.push(blocks[i].trim());
-                        i++;
-                    }
-                    // Process as a single ordered list
-                    console.log('Detected consecutive ordered list items:', listItems);
-                    const listHtml = listItems.map(item => {
-                        let content = item.replace(/^\d+\. /, '').trim();
-                        content = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-                        content = content.replace(/\*(.+?)\*/g, '<em>$1</em>');
-                        content = content.replace(/`(.+?)`/g, '<code>$1</code>');
-                        return `<li>${content}</li>`;
-                    }).join('');
-                    const olHtml = `<ol>${listHtml}</ol>`;
-                    console.log('Generated combined OL HTML:', olHtml);
-                    result.push(olHtml);
-                    continue;
-                }
-
-                // Code blocks
-                if (block.startsWith('```')) {
-                    const code = block.replace(/```/g, '').trim();
-                    result.push(`<pre><code>${code}</code></pre>`);
-                }
-                // Headers
-                else if (block.startsWith('### ')) {
-                    result.push(`<h3>${block.substring(4)}</h3>`);
-                }
-                else if (block.startsWith('## ')) {
-                    result.push(`<h2>${block.substring(3)}</h2>`);
-                }
-                else if (block.startsWith('# ')) {
-                    result.push(`<h1>${block.substring(2)}</h1>`);
-                }
-                // Unordered list
-                else if (block.match(/^- /m)) {
-                    const items = block.split('\n').filter(line => line.trim().startsWith('- '));
-                    const listHtml = items.map(item => {
-                        let content = item.substring(2).trim();
-                        // Apply inline formatting to list items
-                        content = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-                        content = content.replace(/\*(.+?)\*/g, '<em>$1</em>');
-                        content = content.replace(/`(.+?)`/g, '<code>$1</code>');
-                        return `<li>${content}</li>`;
-                    }).join('');
-                    result.push(`<ul>${listHtml}</ul>`);
-                }
-                // Paragraph
-                else {
-                    // Apply inline formatting
-                    let para = block.replace(/\n/g, ' ');
-                    // Bold
-                    para = para.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-                    // Italic (make sure it doesn't match ** first)
-                    para = para.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
-                    // Inline code
-                    para = para.replace(/`(.+?)`/g, '<code>$1</code>');
-                    result.push(`<p>${para}</p>`);
-                }
-
-                i++;
-            }
-
-            return result.join('');
-        }
 
         let hasUserSentMessage = false;
         let conversationHistory = [];
         let projectContext = null;
         let extendedThinkingEnabled = false;
+
+        // ==============================================================================
+        // MEMORY TOOL IMPLEMENTATION
+        // Claude's Memory Tool - Client-side file storage backend
+        // ==============================================================================
+
+        const MEMORY_STORAGE_KEY = 'claude_memories';
+
+        // Initialize memory storage
+        function initMemoryStorage() {
+            if (!localStorage.getItem(MEMORY_STORAGE_KEY)) {
+                localStorage.setItem(MEMORY_STORAGE_KEY, JSON.stringify({}));
+            }
+        }
+
+        // Load all memory files
+        function loadMemories() {
+            try {
+                const stored = localStorage.getItem(MEMORY_STORAGE_KEY);
+                return stored ? JSON.parse(stored) : {};
+            } catch (error) {
+                console.error('Error loading memories:', error);
+                return {};
+            }
+        }
+
+        // Save memory files
+        function saveMemories(memories) {
+            try {
+                localStorage.setItem(MEMORY_STORAGE_KEY, JSON.stringify(memories));
+            } catch (error) {
+                console.error('Error saving memories:', error);
+                if (error.name === 'QuotaExceededError') {
+                    throw new Error('Storage quota exceeded');
+                }
+            }
+        }
+
+        // Validate path security - prevent directory traversal
+        function validateMemoryPath(path) {
+            if (!path.startsWith('/memories/')) {
+                throw new Error('Invalid path: must be within /memories directory');
+            }
+            if (path.includes('../') || path.includes('..\\') || path.includes('%2e%2e')) {
+                throw new Error('Invalid path: directory traversal not allowed');
+            }
+            return path;
+        }
+
+        // Handle memory tool operations
+        async function handleMemoryOperation(operation, input) {
+            try {
+                initMemoryStorage();
+                const memories = loadMemories();
+
+                switch (operation) {
+                    case 'view': {
+                        const path = validateMemoryPath(input.path);
+
+                        // If path is /memories, list all files
+                        if (path === '/memories' || path === '/memories/') {
+                            const files = Object.keys(memories);
+                            if (files.length === 0) {
+                                return { content: 'Directory is empty\n' };
+                            }
+                            return { content: files.map(f => f.replace('/memories/', '')).join('\n') + '\n' };
+                        }
+
+                        // View specific file
+                        const content = memories[path];
+                        if (content === undefined) {
+                            throw new Error(`File not found: ${path}`);
+                        }
+
+                        // Handle line range if specified
+                        if (input.start_line !== undefined || input.end_line !== undefined) {
+                            const lines = content.split('\n');
+                            const start = (input.start_line || 1) - 1;
+                            const end = input.end_line || lines.length;
+                            return { content: lines.slice(start, end).join('\n') + '\n' };
+                        }
+
+                        return { content: content };
+                    }
+
+                    case 'create': {
+                        const path = validateMemoryPath(input.path);
+                        memories[path] = input.content;
+                        saveMemories(memories);
+                        return { success: true, message: `Created file: ${path}` };
+                    }
+
+                    case 'str_replace': {
+                        const path = validateMemoryPath(input.path);
+                        if (memories[path] === undefined) {
+                            throw new Error(`File not found: ${path}`);
+                        }
+
+                        const oldContent = memories[path];
+                        if (!oldContent.includes(input.old_str)) {
+                            throw new Error('old_str not found in file');
+                        }
+
+                        memories[path] = oldContent.replace(input.old_str, input.new_str);
+                        saveMemories(memories);
+                        return { success: true, message: `Updated file: ${path}` };
+                    }
+
+                    case 'insert': {
+                        const path = validateMemoryPath(input.path);
+                        if (memories[path] === undefined) {
+                            throw new Error(`File not found: ${path}`);
+                        }
+
+                        const lines = memories[path].split('\n');
+                        const insertAt = input.insert_line - 1;
+                        lines.splice(insertAt, 0, input.content);
+                        memories[path] = lines.join('\n');
+                        saveMemories(memories);
+                        return { success: true, message: `Inserted content at line ${input.insert_line}` };
+                    }
+
+                    case 'delete': {
+                        const path = validateMemoryPath(input.path);
+                        if (memories[path] === undefined) {
+                            throw new Error(`File not found: ${path}`);
+                        }
+
+                        delete memories[path];
+                        saveMemories(memories);
+                        return { success: true, message: `Deleted file: ${path}` };
+                    }
+
+                    case 'rename': {
+                        const oldPath = validateMemoryPath(input.old_path);
+                        const newPath = validateMemoryPath(input.new_path);
+
+                        if (memories[oldPath] === undefined) {
+                            throw new Error(`File not found: ${oldPath}`);
+                        }
+
+                        memories[newPath] = memories[oldPath];
+                        delete memories[oldPath];
+                        saveMemories(memories);
+                        return { success: true, message: `Renamed ${oldPath} to ${newPath}` };
+                    }
+
+                    default:
+                        throw new Error(`Unknown memory operation: ${operation}`);
+                }
+            } catch (error) {
+                console.error('Memory operation error:', error);
+                return { error: error.message };
+            }
+        }
+
 
         // Load project context - THIS FILE controls both the sidebar AND AI context
         fetch('/project-context.json')
@@ -1370,8 +1530,7 @@
                 projectContext = data;
                 console.log('Project context loaded:', projectContext.projectTitle);
                 populateSidebar(projectContext);
-                // Generate initial suggestions
-                updateSuggestions();
+                // Don't generate suggestions on initial load - use hardcoded ones
             })
             .catch(error => console.error('Error loading project context:', error));
 
@@ -1446,6 +1605,28 @@
             const card = document.getElementById('expandedCard');
             if (overlay) overlay.remove();
             if (card) card.remove();
+        }
+
+        function checkScrollableContent() {
+            // Find all description boxes and check if their scroll containers need scrolling
+            const scrollContainers = document.querySelectorAll('.description-scroll-container');
+            scrollContainers.forEach(container => {
+                if (container.scrollHeight > container.clientHeight) {
+                    // Content is scrollable, add class to container and parent box
+                    container.classList.add('has-scroll');
+                    const parentBox = container.closest('.description-box');
+                    if (parentBox) {
+                        parentBox.classList.add('has-scroll');
+                    }
+                } else {
+                    // Content is not scrollable, remove classes
+                    container.classList.remove('has-scroll');
+                    const parentBox = container.closest('.description-box');
+                    if (parentBox) {
+                        parentBox.classList.remove('has-scroll');
+                    }
+                }
+            });
         }
 
         function setupSeeMore() {
@@ -1549,8 +1730,84 @@
 
             // Setup see more functionality after content is loaded
             setupSeeMore();
+
+            // Populate User Memory tab
+            if (context.userMemory) {
+                // User Profile
+                const userProfileText = document.getElementById('userProfileText');
+                if (userProfileText && context.userMemory.userProfile) {
+                    userProfileText.innerHTML = `<div class="description-section"><div>${context.userMemory.userProfile}</div></div>`;
+                }
+
+                // Company Overview
+                const companyOverviewText = document.getElementById('companyOverviewText');
+                if (companyOverviewText && context.userMemory.companyOverview) {
+                    companyOverviewText.innerHTML = `<div class="description-section"><div>${context.userMemory.companyOverview}</div></div>`;
+                }
+            }
+
+            // Check for scrollable content globally after all content is loaded
+            setTimeout(checkScrollableContent, 100);
         }
 
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const openBtn = document.querySelector('.sidebar-open-btn');
+
+            sidebar.classList.toggle('hidden');
+            openBtn.classList.toggle('visible');
+        }
+
+        function updateConversationLogUI() {
+            const conversationLogText = document.getElementById('conversationLogText');
+            if (!conversationLogText) return;
+
+            // Load memory files from storage
+            const memories = loadMemories();
+            const sessionFiles = Object.keys(memories).filter(path => path.startsWith('/memories/session_'));
+
+            if (sessionFiles.length === 0) {
+                conversationLogText.innerHTML = '<p style="color: #9ca3af; font-size: 13px;">No conversation memory yet. As you chat, Claude will automatically save summaries here.</p>';
+                return;
+            }
+
+            // Sort by filename (which contains date) - newest first
+            sessionFiles.sort().reverse();
+
+            // Build session cards HTML
+            const sessionsHTML = sessionFiles.map(filePath => {
+                const filename = filePath.replace('/memories/session_', '').replace('.txt', '');
+                const content = memories[filePath];
+                const lines = content.split('\n').filter(line => line.trim());
+                const exchangeCount = lines.length;
+
+                // Parse date from filename (format: YYYY-MM-DD)
+                const dateStr = filename;
+                let displayDate = dateStr;
+                try {
+                    const date = new Date(dateStr);
+                    displayDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                } catch (e) {
+                    // Keep original if parsing fails
+                }
+
+                // Show first 2 summaries as preview
+                const preview = lines.slice(0, 2).join(' | ');
+                const previewText = preview.length > 150 ? preview.substring(0, 150) + '...' : preview;
+
+                return `
+                    <div class="session-card">
+                        <div class="session-header">
+                            <div class="session-date">${displayDate}</div>
+                            <div class="session-meta">${exchangeCount} exchange${exchangeCount !== 1 ? 's' : ''}</div>
+                        </div>
+                        <div class="session-summary">${previewText || 'Session in progress...'}</div>
+                    </div>
+                `;
+            }).join('');
+
+            conversationLogText.innerHTML = sessionsHTML;
+        }
 
         function handleKeyPress(event) {
             if (event.key === 'Enter' && !event.shiftKey) {
@@ -1687,6 +1944,10 @@
                         type: "web_search_20250305",
                         name: "web_search",
                         max_uses: 5
+                    },
+                    {
+                        type: "memory_20250627",
+                        name: "memory"
                     }
                 ]
             };
@@ -1705,10 +1966,23 @@
             // Add project context as cached system message
             // Uses the SAME file (project-context.json) that populates the sidebar
             if (projectContext && projectContext.contextForAI) {
+                // Build system message
+                let systemText = projectContext.contextForAI;
+
+                systemText += '\n\nYou are Dia, an AI assistant created by Anthropic. You should respond in a conversational, helpful manner using plain text only, as the interface cannot render markdown.';
+
+                // Add memory tool instructions
+                systemText += '\n\n## MEMORY MANAGEMENT\n\n';
+                systemText += 'You have access to a memory tool that persists information across conversations. You can use it to:\n';
+                systemText += '- Check /memories directory at conversation start to recall previous context\n';
+                systemText += '- Optionally store important information from conversations for future reference\n';
+                systemText += '- Keep session logs in /memories/session_' + new Date().toISOString().split('T')[0] + '.txt if needed\n\n';
+                systemText += 'IMPORTANT: Always provide a complete text response to the user FIRST. Memory operations are optional and secondary to helping the user.';
+
                 requestBody.system = [
                     {
                         type: 'text',
-                        text: projectContext.contextForAI + '\n\nIMPORTANT: Format your responses using markdown for maximum readability:\n\n- Write in flowing paragraphs with complete sentences\n- Use bullet points (- ) or numbered lists (1. ) when presenting multiple items\n- Use `code` formatting for technical terms, file names, or commands\n- Use code blocks (```) for multi-line code snippets\n- Use line breaks to separate distinct topics or sections\n- Write conversationally and naturally\n\nBOLDING GUIDELINES:\nUse **bold** formatting sparingly and purposefully to enhance readability, not as default styling.\n\nWhen to bold:\n- Key terms or concepts when first introduced in technical explanations\n- Critical warnings, important caveats, or safety information\n- Specific answers to direct questions (e.g., "The capital is **Paris**")\n- Section transitions in longer responses where prose alone isn\'t sufficient for navigation\n\nWhen NOT to bold:\n- In casual conversation or chat - almost never\n- For emphasis in emotional or empathetic responses - rely on word choice instead\n- Repeatedly throughout a response - one or two strategic bolds maximum in most cases\n- In lists or structured content where formatting already provides visual hierarchy\n- As a substitute for clear writing - don\'t bold to compensate for unclear prose\n\nGuardrails:\n- Maximum 2-3 bolded phrases per response in typical cases\n- Never bold entire sentences unless absolutely critical (like safety warnings)\n- Avoid bolding in consecutive sentences - space it out\n- Don\'t bold common words or phrases people already understand\n- Skip bolding entirely in responses under 3-4 sentences\n\nTest: Before bolding, ask "Would this response be unclear without the bold?" If no, don\'t bold it.\nThe default should be no bolding. Add it only when its absence would genuinely reduce clarity or cause the reader to miss something important.\n\nWEB SEARCH TOOL:\nYou have access to a web_search tool. Use it proactively and liberally for:\n- Current events, news, or recent information\n- Real-time data (stock prices, weather, sports scores, etc.)\n- Industry best practices and how other companies approach problems\n- Research topics where external examples would enrich your answer\n- Recent product releases, API documentation, or technology updates\n- Questions about team organization, processes, or methodologies at other companies\n- Any topic where additional research, examples, or data points would provide more comprehensive answers\n- Verifying or supplementing information even if you have some knowledge about it\n\nBe proactive: Even if you know something about a topic, use web search when external research would make your answer more helpful, current, or well-rounded. The user values thorough research over quick responses.\n\nDo NOT use web search for:\n- Questions specifically about the provided project context\n- Simple definitions or explanations you can confidently provide',
+                        text: systemText + '\n\n## Response Style Guidelines\n\n### General Approach\n- Write in natural paragraphs and prose as your default\n- NEVER use markdown formatting (no **, ##, ###, `, etc.) since it won\'t render\n- Keep responses proportional to the question - simple questions get concise answers, complex questions get thorough exploration\n- Use plain text only - the system cannot display formatted text\n\n### Formatting Rules\n- Never use asterisks for bold or italics - they will display as literal asterisks\n- Never use backticks for code - just write code or technical terms plainly\n- Never use headers with # symbols - they will display as literal # characters\n- Avoid lists in general - write in flowing paragraphs instead\n- Simple dash lists (using "-") are acceptable ONLY when listing short, distinct items where prose would be awkward (like a shopping list, quick options, or brief distinct points)\n- When you do use dash lists, keep each item brief - usually just a few words or one short sentence\n- For explanations, advice, or detailed content, always use prose paragraphs instead of lists\n\n### Tone and Content\n- Be conversational but not overly casual\n- Get straight to the point without unnecessary preambles like "I\'m here to help you with..."\n- Organize thoughts through clear prose rather than visual formatting\n- For technical or work-related queries, maintain professional tone while staying accessible\n\n### When Dash Lists Are Appropriate\nUse simple dash lists only for:\n- Quick enumeration of options or choices\n- Brief, distinct items that don\'t need explanation\n- When the user specifically asks for a list\n- Cases where prose would be genuinely awkward (like listing file names, short menu options, etc.)\n\nNever use lists for:\n- Explanations or advice\n- Multi-sentence points\n- Step-by-step instructions (write these in prose)\n- Organizing different topics or sections\n\n### Example Transformation\nInstead of: "For your next sprint planning, you should prepare: \n- Review Current Sprint Status: Walk through your Linear board...\n- Align on Milestone Progress: Since you\'re in the Espresso milestone..."\n\nWrite: "For your next sprint planning, you\'ll want to walk through your Linear board to understand what\'s shipping and what\'s slipping. This gives you context about blockers and helps avoid overcommitting. Since you\'re in the Espresso milestone, it\'s worth assessing where both workstreams stand against your six-week goals..."\n\nRemember: Write as if you\'re explaining something to a colleague in a plain text email or chat message. Default to prose, and only use dash lists when they genuinely make the information clearer and more scannable for very brief items.\n\n### WEB SEARCH TOOL\nYou have access to a web_search tool. Use it proactively and liberally for:\n- Current events, news, or recent information\n- Real-time data (stock prices, weather, sports scores, etc.)\n- Industry best practices and how other companies approach problems\n- Research topics where external examples would enrich your answer\n- Recent product releases, API documentation, or technology updates\n- Questions about team organization, processes, or methodologies at other companies\n- Any topic where additional research, examples, or data points would provide more comprehensive answers\n- Verifying or supplementing information even if you have some knowledge about it\n\nBe proactive: Even if you know something about a topic, use web search when external research would make your answer more helpful, current, or well-rounded. The user values thorough research over quick responses.\n\nDo NOT use web search for:\n- Questions specifically about the provided project context\n- Simple definitions or explanations you can confidently provide',
                         cache_control: { type: 'ephemeral' }
                     }
                 ];
@@ -1751,6 +2025,9 @@
             let isThinkingBlock = false;
             let currentToolUseId = null;
             let toolInputJson = {};
+            let pendingMemoryTools = [];  // Track memory tool uses
+            let assistantContent = [];  // Track full assistant message content blocks
+            let stopReason = null;  // Track why the message stopped
 
             // Create a container for thinking/tool blocks that appears before the text
             const blocksContainerId = 'blocks-' + Date.now();
@@ -1764,7 +2041,7 @@
                     const remaining = fullText.substring(displayText.length);
                     const nextChunk = remaining.substring(0, Math.max(1, Math.ceil(remaining.length * 0.3)));
                     displayText += nextChunk;
-                    streamingTextElement.innerHTML = parseMarkdown(displayText);
+                    streamingTextElement.textContent = displayText;
                     scrollToBottom();
 
                     if (displayText !== fullText) {
@@ -1824,6 +2101,38 @@
                                 } else if (event.content_block?.type === 'text') {
                                     isThinkingBlock = false;
                                     console.log('Started text block');
+                                } else if (event.content_block?.type === 'tool_use') {
+                                    // Client-side tool use (memory tool)
+                                    console.log('Client tool use started:', event.content_block.name, 'ID:', event.content_block.id);
+                                    currentToolUseId = event.content_block.id;
+
+                                    // Track memory tool uses for later execution
+                                    if (event.content_block.name === 'memory') {
+                                        const toolUse = {
+                                            id: event.content_block.id,
+                                            type: 'tool_use',
+                                            name: 'memory',
+                                            input: {}
+                                        };
+                                        pendingMemoryTools.push(toolUse);
+                                        toolInputJson[event.index] = '';
+
+                                        // Show UI indicator
+                                        const toolBoxHtml = `
+                                            <div class="thinking-box" id="memory-${toolUse.id}">
+                                                <div class="thinking-box-header" onclick="toggleThinkingBox(event)">
+                                                    <div class="thinking-box-title">
+                                                        <span>💾 Writing to memory...</span>
+                                                    </div>
+                                                    <div class="thinking-box-meta">
+                                                        <span class="thinking-box-toggle">▼</span>
+                                                    </div>
+                                                </div>
+                                                <div class="thinking-box-content collapsed" id="memory-${toolUse.id}-content"></div>
+                                            </div>
+                                        `;
+                                        blocksContainer.insertAdjacentHTML('beforeend', toolBoxHtml);
+                                    }
                                 } else if (event.content_block?.type === 'server_tool_use') {
                                     console.log('Server tool use started:', event.content_block.name, 'ID:', event.content_block.id);
                                     console.log('Full content_block:', JSON.stringify(event.content_block, null, 2));
@@ -1871,6 +2180,21 @@
                                 }
                             }
 
+                            // Handle message_stop to check stop reason
+                            if (event.type === 'message_stop') {
+                                console.log('Message stopped:', event);
+                                stopReason = event.stop_reason || event['amazon-bedrock-invocationMetrics']?.stopReason;
+                                console.log('Stop reason:', stopReason);
+                            }
+
+                            // Handle message_delta to extract stop_reason
+                            if (event.type === 'message_delta') {
+                                if (event.delta?.stop_reason) {
+                                    stopReason = event.delta.stop_reason;
+                                    console.log('Stop reason from delta:', stopReason);
+                                }
+                            }
+
                             // Handle content_block_delta events
                             if (event.type === 'content_block_delta') {
                                 // Handle thinking content
@@ -1908,7 +2232,7 @@
                                     continue;
                                 }
 
-                                // Handle tool input (for web search query)
+                                // Handle tool input (for both web search and memory)
                                 if (event.delta?.type === 'input_json_delta' && event.delta?.partial_json) {
                                     console.log('Received input_json_delta:', event.delta.partial_json);
                                     if (!toolInputJson[event.index]) {
@@ -1916,12 +2240,13 @@
                                     }
                                     toolInputJson[event.index] += event.delta.partial_json;
 
-                                    // Try to parse and update the search query in the title
+                                    // Try to parse and update UI
                                     try {
                                         const input = JSON.parse(toolInputJson[event.index]);
                                         console.log('Parsed input:', input);
+
+                                        // Update web search query
                                         if (input.query && currentToolUseId) {
-                                            // Update the title to show the actual search query
                                             const toolBox = document.getElementById('tool-' + currentToolUseId);
                                             if (toolBox) {
                                                 const titleSpan = toolBox.querySelector('.thinking-box-title span');
@@ -1930,6 +2255,11 @@
                                                     console.log('Updated search query title to:', input.query);
                                                 }
                                             }
+                                        }
+
+                                        // Store input for memory tools
+                                        if (pendingMemoryTools.length > 0 && event.index < pendingMemoryTools.length) {
+                                            pendingMemoryTools[event.index].input = input;
                                         }
                                     } catch (e) {
                                         // JSON not complete yet, wait for more chunks
@@ -1956,7 +2286,7 @@
 
             // Ensure final text is displayed
             displayText = fullText;
-            streamingTextElement.innerHTML = parseMarkdown(fullText);
+            streamingTextElement.textContent = fullText;
 
             // Ensure final thinking text is displayed
             if (thinkingElement && thinkingText) {
@@ -1964,7 +2294,87 @@
                 thinkingElement.textContent = thinkingText;
             }
 
-            // Add assistant response to conversation history
+            // Handle memory tool execution if stop_reason is tool_use
+            if (stopReason === 'tool_use' && pendingMemoryTools.length > 0) {
+                console.log('Executing memory tools:', pendingMemoryTools);
+
+                // Build assistant message content with tool_use blocks
+                const assistantMessage = {
+                    role: 'assistant',
+                    content: []
+                };
+
+                // Add text content if any
+                if (fullText) {
+                    assistantMessage.content.push({
+                        type: 'text',
+                        text: fullText
+                    });
+                }
+
+                // Add tool_use blocks
+                pendingMemoryTools.forEach(tool => {
+                    assistantMessage.content.push({
+                        type: 'tool_use',
+                        id: tool.id,
+                        name: 'memory',
+                        input: tool.input
+                    });
+                });
+
+                // Add assistant message to history
+                conversationHistory.push(assistantMessage);
+
+                // Execute memory operations and build tool_result messages
+                const toolResults = [];
+                for (const tool of pendingMemoryTools) {
+                    try {
+                        console.log('Executing memory operation:', tool.input.command, tool.input);
+                        const result = await handleMemoryOperation(tool.input.command, tool.input);
+                        console.log('Memory operation result:', result);
+
+                        // Update UI to show success
+                        const memoryBox = document.getElementById(`memory-${tool.id}`);
+                        if (memoryBox) {
+                            const titleSpan = memoryBox.querySelector('.thinking-box-title span');
+                            if (titleSpan) {
+                                titleSpan.textContent = `💾 Memory updated: ${tool.input.path || 'operation completed'}`;
+                            }
+                            const contentEl = document.getElementById(`memory-${tool.id}-content`);
+                            if (contentEl) {
+                                contentEl.textContent = JSON.stringify(result, null, 2);
+                            }
+                        }
+
+                        toolResults.push({
+                            type: 'tool_result',
+                            tool_use_id: tool.id,
+                            content: result.content || JSON.stringify(result)
+                        });
+                    } catch (error) {
+                        console.error('Memory operation failed:', error);
+                        toolResults.push({
+                            type: 'tool_result',
+                            tool_use_id: tool.id,
+                            is_error: true,
+                            content: error.message
+                        });
+                    }
+                }
+
+                // Add tool_result as user message
+                conversationHistory.push({
+                    role: 'user',
+                    content: toolResults
+                });
+
+                // Continue conversation with tool results - recursive call
+                console.log('Continuing conversation with tool results');
+                await callAnthropicAPIStreaming(thinkingWrapper);
+                return;
+            }
+
+            // Normal completion - add assistant response to conversation history
             conversationHistory.push({
                 role: 'assistant',
                 content: fullText
@@ -1994,7 +2404,7 @@
             return div.innerHTML;
         }
 
-        function switchTab(tabName) {
+        function switchTab(event, tabName) {
             // Remove active class from all tabs and content
             document.querySelectorAll('.sidebar-tab').forEach(tab => {
                 tab.classList.remove('active');
@@ -2006,6 +2416,9 @@
             // Add active class to selected tab and content
             event.target.classList.add('active');
             document.getElementById(tabName + '-tab').classList.add('active');
+
+            // Check scrollable content after tab switch
+            setTimeout(checkScrollableContent, 10);
         }
 
         async function updateSuggestions() {
