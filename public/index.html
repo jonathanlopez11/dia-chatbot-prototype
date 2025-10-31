@@ -1365,6 +1365,10 @@
         let projectContext = null;
         let extendedThinkingEnabled = false;
 
+        // Generate a unique session ID for this browsing session
+        const sessionId = 'session-' + Date.now();
+        const sessionStartTime = new Date();
+
         // Load project context - THIS FILE controls both the sidebar AND AI context
         fetch('/project-context.json')
             .then(response => response.json())
@@ -2161,19 +2165,47 @@ Provide exactly 2 sentences summarizing this interaction.`
             const conversationLogText = document.getElementById('conversationLogText');
             if (!conversationLogText) return;
 
+            // Check if a session box exists for this session
+            let sessionBox = document.getElementById(sessionId);
+
+            if (!sessionBox) {
+                // Create a new session box
+                const sessionTimeString = sessionStartTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                const sessionDateString = sessionStartTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+                sessionBox = document.createElement('div');
+                sessionBox.id = sessionId;
+                sessionBox.className = 'description-section';
+                sessionBox.style.marginBottom = '16px';
+                sessionBox.style.padding = '12px';
+                sessionBox.style.background = '#f9fafb';
+                sessionBox.style.borderRadius = '8px';
+                sessionBox.style.border = '1px solid #e5e7eb';
+
+                sessionBox.innerHTML = `
+                    <div style="color: #6b7280; font-weight: 500; font-size: 13px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb;">
+                        Session: ${sessionDateString} at ${sessionTimeString}
+                    </div>
+                    <div class="session-entries"></div>
+                `;
+
+                // Insert at the top (most recent session first)
+                conversationLogText.insertBefore(sessionBox, conversationLogText.firstChild);
+            }
+
+            // Add the conversation entry to this session
+            const sessionEntries = sessionBox.querySelector('.session-entries');
             const now = new Date();
             const timeString = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-            const dateString = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
             const logEntry = document.createElement('div');
-            logEntry.className = 'description-section';
-            logEntry.style.marginBottom = '12px';
+            logEntry.style.marginBottom = '10px';
             logEntry.innerHTML = `
-                <div style="color: #6b7280; font-size: 12px; margin-bottom: 4px;">${timeString} • ${dateString}</div>
-                <div>${summary}</div>
+                <div style="color: #6b7280; font-size: 11px; margin-bottom: 3px;">${timeString}</div>
+                <div style="font-size: 13px; color: #374151;">${summary}</div>
             `;
 
-            conversationLogText.appendChild(logEntry);
+            sessionEntries.appendChild(logEntry);
         }
 
         function toggleThinkingBox(event) {
