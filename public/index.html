@@ -1859,7 +1859,7 @@
                 systemText = projectContext.contextForAI + '\n\n';
             }
 
-            systemText += 'You are Dia, an AI assistant created by Anthropic. You should respond in a conversational, helpful manner using plain text only, as the interface cannot render markdown.';
+            systemText += 'You are Dia, an AI assistant created by The Browser Company. You should respond in a conversational, helpful manner using plain text only, as the interface cannot render markdown.';
 
             requestBody.system = [
                 {
@@ -2185,13 +2185,11 @@
                         messages: [
                             {
                                 role: 'user',
-                                content: `You are summarizing a conversation interaction. Given the user's query and the LLM's response, create a 2-sentence summary that captures what the user asked and what the LLM responded.
+                                content: `Create a single high-density sentence summarizing this conversation for context in future LLM calls. Format: "User asked about [key topic/action] and Dia responded with [core information/action taken]." Be concise and information-rich.
 
 User Query: ${userQuery}
 
-LLM Response: ${assistantResponse}
-
-Provide exactly 2 sentences summarizing this interaction.`
+Dia Response: ${assistantResponse}`
                             }
                         ]
                     })
