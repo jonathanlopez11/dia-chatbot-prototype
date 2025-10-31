@@ -2116,7 +2116,14 @@
 
                         try {
                             const event = JSON.parse(data);
-                            console.log('Parsed event:', event.type);
+                            console.log('Parsed event type:', event.type);
+                            console.log('Full event:', event);
+
+                            // Check for error in event
+                            if (event.error) {
+                                console.error('API returned error in stream:', event.error);
+                                throw new Error(`API Error: ${JSON.stringify(event.error)}`);
+                            }
 
                             // Handle content_block_start to detect thinking vs text blocks
                             if (event.type === 'content_block_start') {
