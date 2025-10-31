@@ -1901,7 +1901,7 @@
             systemText += historyContext;
 
             // If this is the first message in the session and there's previous history, prompt for continuity
-            if (conversationHistory.length === 0 && historyContext.length > 0) {
+            if (conversationHistory.length === 1 && historyContext.length > 0) {
                 systemText += '\n\nIMPORTANT: This is the user\'s first message in this session. Since there is previous conversation history above, acknowledge it casually and offer to continue from where you left off. Be natural and conversational. Example: "Welcome back! Last time we talked about [topic]. Want to pick up where we left off?" Keep it brief and friendly.';
             }
 
