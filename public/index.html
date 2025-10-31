@@ -1492,7 +1492,16 @@
             const messageBubble = greetingWrapper.querySelector('.message-bubble');
             const hardcodedIntro = "Hi, I'm Dia and I'm here to help you discuss or brainstorm your project on Apps Pod: Espresso Milestone. Ask me anything about the project or any research you'd like me to do!";
 
-            // Fake-stream the hardcoded intro text
+            // Create a promise that resolves when fake streaming is done
+            let resolveFakeStreaming;
+            const fakeStreamingComplete = new Promise(resolve => {
+                resolveFakeStreaming = resolve;
+            });
+
+            // Start API call immediately (it will wait to display until fake streaming is done)
+            const apiPromise = callAnthropicAPIStreaming(greetingWrapper, fakeStreamingComplete);
+
+            // Fake-stream the hardcoded intro text (runs in parallel with API call)
             await new Promise(resolve => {
                 let i = 0;
                 const interval = setInterval(() => {
@@ -1503,13 +1512,14 @@
                     } else {
                         messageBubble.textContent = hardcodedIntro;
                         clearInterval(interval);
+                        resolveFakeStreaming(); // Signal that fake streaming is done
                         resolve();
                     }
                 }, 20); // 20ms interval
             });
 
-            // After fake streaming finishes, call API to generate continuation
-            await callAnthropicAPIStreaming(greetingWrapper);
+            // Wait for API call to complete
+            await apiPromise;
 
             // After generating, set flag to false
             isInitialGreeting = false;
@@ -1898,7 +1908,7 @@
             scrollToBottom();
         }
 
-        async function callAnthropicAPIStreaming(thinkingWrapper) {
+        async function callAnthropicAPIStreaming(thinkingWrapper, waitForPromise = null) {
             console.log('callAnthropicAPIStreaming started');
 
             // Prepare API request with prompt caching
@@ -1994,6 +2004,11 @@
                     <div class="message-bubble assistant" id="${uniqueId}"></div>
                 `);
                 streamingTextElement = document.getElementById(uniqueId);
+            }
+
+            // Wait for the optional promise before starting to stream (for initial greeting)
+            if (waitForPromise) {
+                await waitForPromise;
             }
 
             // Read the streaming response with smoother updates
