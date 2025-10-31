@@ -1442,6 +1442,41 @@
             });
         }
 
+        // Build conversation history context for LLM
+        function buildConversationHistoryContext() {
+            const sessions = loadConversationSessions();
+
+            // Sort sessions by start time (oldest first for chronological order)
+            const sortedSessionIds = Object.keys(sessions).sort((a, b) => {
+                return new Date(sessions[a].startTime) - new Date(sessions[b].startTime);
+            });
+
+            // Exclude current session to avoid duplication with conversationHistory
+            const pastSessions = sortedSessionIds.filter(id => id !== sessionId);
+
+            if (pastSessions.length === 0) {
+                return '';
+            }
+
+            let contextText = '\n\n## Previous Conversation History\n\n';
+            contextText += 'Below are summaries of all previous conversations the user has had with Dia in this chat experience. Use this information for continuity and context only when relevant to the current conversation. Do not reference these summaries unless the user asks about past interactions or the context is directly relevant.\n\n';
+
+            pastSessions.forEach(id => {
+                const sessionData = sessions[id];
+                const startTime = new Date(sessionData.startTime);
+                const dateString = startTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const timeString = startTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+                contextText += `Session from ${dateString} at ${timeString}:\n`;
+                sessionData.entries.forEach(entry => {
+                    contextText += `- ${entry.summary}\n`;
+                });
+                contextText += '\n';
+            });
+
+            return contextText;
+        }
+
         // Load project context - THIS FILE controls both the sidebar AND AI context
         fetch('/project-context.json')
             .then(response => response.json())
@@ -1860,6 +1895,9 @@
             }
 
             systemText += 'You are Dia, an AI assistant created by The Browser Company. You should respond in a conversational, helpful manner using plain text only, as the interface cannot render markdown.';
+
+            // Add conversation history context from previous sessions
+            systemText += buildConversationHistoryContext();
 
             requestBody.system = [
                 {
