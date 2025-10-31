@@ -1504,9 +1504,11 @@
                     const topicMatch = lastSummary.match(/User asked about (.+?)(?:\.|$)/i);
                     let topic = topicMatch ? topicMatch[1] : lastSummary;
 
-                    // Keep topic very short (max 40 characters)
+                    // Keep topic very short (max 40 characters) - truncate at word boundary
                     if (topic.length > 40) {
-                        topic = topic.substring(0, 40).trim() + '...';
+                        const truncated = topic.substring(0, 40);
+                        const lastSpace = truncated.lastIndexOf(' ');
+                        topic = (lastSpace > 0 ? truncated.substring(0, lastSpace) : truncated).trim() + '...';
                     }
 
                     // Append continuity message to existing greeting with line breaks
