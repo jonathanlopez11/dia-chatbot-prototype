@@ -1291,7 +1291,7 @@
                     </svg>
                 </div>
                 <div class="message-content-wrapper">
-                    <div class="message-bubble assistant">Hello! I'm here to help you with the Apps Pod: Espresso Milestone. Ask me anything about the project!</div>
+                    <div class="message-bubble assistant" id="initialGreeting">Hello! I'm here to help you with the Apps Pod: Espresso Milestone. Ask me anything about the project!</div>
                 </div>
             </div>
         </div>
@@ -1477,6 +1477,39 @@
             return contextText;
         }
 
+        // Update initial greeting based on conversation history
+        function updateInitialGreeting() {
+            const greetingElement = document.getElementById('initialGreeting');
+            if (!greetingElement) return;
+
+            const sessions = loadConversationSessions();
+            const sortedSessionIds = Object.keys(sessions).sort((a, b) => {
+                return new Date(sessions[b].startTime) - new Date(sessions[a].startTime);
+            });
+
+            // Exclude current session
+            const pastSessions = sortedSessionIds.filter(id => id !== sessionId);
+
+            if (pastSessions.length > 0) {
+                // Get the most recent past session
+                const lastSessionId = pastSessions[0];
+                const lastSession = sessions[lastSessionId];
+
+                if (lastSession.entries.length > 0) {
+                    // Get the last summary from the most recent session
+                    const lastEntry = lastSession.entries[lastSession.entries.length - 1];
+                    const lastSummary = lastEntry.summary;
+
+                    // Extract a brief topic from the summary (first 60 characters or up to first period)
+                    const topicMatch = lastSummary.match(/User asked about (.+?)(?:\.|$)/i);
+                    const topic = topicMatch ? topicMatch[1] : lastSummary.substring(0, 60) + '...';
+
+                    // Update greeting to reference last conversation
+                    greetingElement.textContent = `Welcome back! Last time we talked about ${topic}. Want to pick up where we left off, or shall we start something new?`;
+                }
+            }
+        }
+
         // Load project context - THIS FILE controls both the sidebar AND AI context
         fetch('/project-context.json')
             .then(response => response.json())
@@ -1490,6 +1523,9 @@
 
         // Load past conversation sessions on page load
         displayPastSessions();
+
+        // Update initial greeting based on conversation history
+        updateInitialGreeting();
 
         let expandedCardTimeout;
 
@@ -1899,11 +1935,6 @@
             // Add conversation history context from previous sessions
             const historyContext = buildConversationHistoryContext();
             systemText += historyContext;
-
-            // If this is the first message in the session and there's previous history, prompt for continuity
-            if (conversationHistory.length === 1 && historyContext.length > 0) {
-                systemText += '\n\nIMPORTANT: This is the user\'s first message in this session. Since there is previous conversation history above, acknowledge it casually and offer to continue from where you left off. Be natural and conversational. Example: "Welcome back! Last time we talked about [topic]. Want to pick up where we left off?" Keep it brief and friendly.';
-            }
 
             requestBody.system = [
                 {
