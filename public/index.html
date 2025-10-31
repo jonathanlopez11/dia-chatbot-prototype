@@ -1483,11 +1483,13 @@
                         <path d="M12 2L15 8.5L22 12L15 15.5L12 22L9 15.5L2 12L9 8.5L12 2Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <div class="message-content-wrapper"></div>
+                <div class="message-content-wrapper">
+                    <div class="message-bubble assistant">Hi, I'm Dia and I'm here to help you discuss or brainstorm your project on Apps Pod: Espresso Milestone. Ask me anything about the project or any research you'd like me to do!</div>
+                </div>
             `;
             chatContent.appendChild(greetingWrapper);
 
-            // Call the API to generate a dynamic greeting
+            // Call the API to generate the continuation (history reference if exists)
             await callAnthropicAPIStreaming(greetingWrapper);
 
             // After generating, set flag to false
@@ -1928,7 +1930,7 @@
 
             // Add conditional prompt for initial greeting
             if (isInitialGreeting) {
-                systemText += '\n\nIMPORTANT: This is the very first message when the user opens the chat. Output exactly this greeting:\n\n"Hi, I\'m Dia and I\'m here to help you discuss or brainstorm your project on Apps Pod: Espresso Milestone. Ask me anything about the project or any research you\'d like me to do!"\n\nThen add a line break. If there is conversation history in the context above, add one casual sentence about what was talked about last time. Make it sound natural like "Last time we talked about [brief topic]" - keep it very brief (max 40 characters for the topic) and truncate at word boundaries if needed. Then add another line break and ask "Would you like to pick up where we left off or discuss something else?"';
+                systemText += '\n\nIMPORTANT: This is the very first message when the user opens the chat. The intro has already been shown to the user. Your job is to add a continuation if there is conversation history in the context above. If there is previous conversation history, add a line break then one casual sentence about what was talked about last time. Make it sound natural like "Last time we talked about [topic description]" - be descriptive enough that the user remembers what you discussed. Then add another line break and ask "Would you like to pick up where we left off or discuss something else?" If there is NO previous conversation history, output nothing (just an empty response).';
             }
 
             requestBody.system = [
@@ -1959,14 +1961,21 @@
 
             console.log('Response OK, starting to read stream...');
 
-            // Add message bubble to the existing thinking wrapper
-            const uniqueId = 'streaming-' + Date.now();
+            // For initial greeting, use existing bubble; otherwise create new one
+            let streamingTextElement;
             const contentWrapper = thinkingWrapper.querySelector('.message-content-wrapper');
-            contentWrapper.insertAdjacentHTML('beforeend', `
-                <div class="message-bubble assistant" id="${uniqueId}"></div>
-            `);
 
-            const streamingTextElement = document.getElementById(uniqueId);
+            if (isInitialGreeting) {
+                // Use the existing message bubble for initial greeting
+                streamingTextElement = contentWrapper.querySelector('.message-bubble');
+            } else {
+                // Add new message bubble to the existing thinking wrapper
+                const uniqueId = 'streaming-' + Date.now();
+                contentWrapper.insertAdjacentHTML('beforeend', `
+                    <div class="message-bubble assistant" id="${uniqueId}"></div>
+                `);
+                streamingTextElement = document.getElementById(uniqueId);
+            }
 
             // Read the streaming response with smoother updates
             const reader = response.body.getReader();
@@ -1986,6 +1995,9 @@
             let assistantContent = [];  // Track full assistant message content blocks
             let stopReason = null;  // Track why the message stopped
 
+            // For initial greeting, store the intro text to prepend
+            const introText = isInitialGreeting ? streamingTextElement.textContent : '';
+
             // Create a container for thinking/tool blocks that appears before the text
             const blocksContainerId = 'blocks-' + Date.now();
             streamingTextElement.insertAdjacentHTML('beforebegin', `<div id="${blocksContainerId}" style="width: 100%; display: flex; flex-direction: column;"></div>`);
@@ -1998,7 +2010,7 @@
                     const remaining = fullText.substring(displayText.length);
                     const nextChunk = remaining.substring(0, Math.max(1, Math.ceil(remaining.length * 0.3)));
                     displayText += nextChunk;
-                    streamingTextElement.textContent = displayText;
+                    streamingTextElement.textContent = introText + displayText;
                     scrollToBottom();
 
                     if (displayText !== fullText) {
@@ -2224,7 +2236,7 @@
 
             // Ensure final text is displayed
             displayText = fullText;
-            streamingTextElement.textContent = fullText;
+            streamingTextElement.textContent = introText + fullText;
 
             // Ensure final thinking text is displayed
             if (thinkingElement && thinkingText) {
