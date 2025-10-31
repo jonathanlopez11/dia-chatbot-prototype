@@ -294,12 +294,6 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .conversation-log-box {
-            background: #f9fafb;
-            border: 1px solid #f3f4f6;
-            box-shadow: none;
-        }
-
         .description-scroll-container {
             max-height: 300px;
             overflow-y: auto;
@@ -1301,11 +1295,7 @@
                         <span>Conversation History</span>
                         <button onclick="clearConversationHistory()" style="background: none; border: none; color: #9ca3af; font-size: 13px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: color 0.2s;" onmouseover="this.style.color='#6b7280'" onmouseout="this.style.color='#9ca3af'">Clear History</button>
                     </div>
-                    <div class="description-box conversation-log-box">
-                        <div class="description-scroll-container">
-                            <div class="description-text" id="conversationLogText"></div>
-                        </div>
-                    </div>
+                    <div id="conversationLogText"></div>
                 </div>
             </div>
         </div>
