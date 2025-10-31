@@ -2090,22 +2090,33 @@
             while (true) {
                 const { done, value } = await reader.read();
 
-                if (done) break;
+                if (done) {
+                    console.log('Stream reader done');
+                    break;
+                }
 
-                buffer += decoder.decode(value, { stream: true });
+                const chunk = decoder.decode(value, { stream: true });
+                console.log('Received chunk, length:', chunk.length);
+                buffer += chunk;
                 const lines = buffer.split('\n');
 
                 // Keep the last incomplete line in the buffer
                 buffer = lines.pop() || '';
 
+                console.log('Processing', lines.length, 'lines from buffer');
+
                 for (const line of lines) {
                     if (line.startsWith('data: ')) {
                         const data = line.slice(6);
 
-                        if (data === '[DONE]') continue;
+                        if (data === '[DONE]') {
+                            console.log('Received [DONE] marker');
+                            continue;
+                        }
 
                         try {
                             const event = JSON.parse(data);
+                            console.log('Parsed event:', event.type);
 
                             // Handle content_block_start to detect thinking vs text blocks
                             if (event.type === 'content_block_start') {
