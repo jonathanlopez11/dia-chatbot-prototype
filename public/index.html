@@ -481,7 +481,7 @@
         .objectives-list {
             background: white;
             border-radius: var(--radius);
-            padding: 16px 12px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
             gap: 0;
@@ -491,7 +491,6 @@
         .objective-item {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
             font-size: 13px;
             line-height: 1.5;
             color: #6b7280;
@@ -1775,7 +1774,6 @@
             const objectivesList = document.querySelector('.objectives-list');
             if (objectivesList && context.keyObjectives && context.keyObjectives.length > 0) {
                 objectivesList.innerHTML = context.keyObjectives.map((obj, index) => {
-                    const number = index + 1;
                     // Split on first colon to separate label from description
                     const colonIndex = obj.indexOf(':');
                     if (colonIndex !== -1) {
@@ -1783,7 +1781,6 @@
                         const description = obj.substring(colonIndex + 1).trim();
                         return `
                             <div class="objective-item">
-                                <div class="objective-bullet">${number}</div>
                                 <div>
                                     <span class="objective-label">${label}</span>
                                     <span class="objective-description">${description}</span>
@@ -1793,7 +1790,6 @@
                     } else {
                         return `
                             <div class="objective-item">
-                                <div class="objective-bullet">${number}</div>
                                 <div>${obj}</div>
                             </div>
                         `;
