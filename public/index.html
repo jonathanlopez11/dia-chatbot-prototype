@@ -1255,7 +1255,10 @@
         <div id="conversation-tab" class="tab-content">
             <div class="section">
                 <div class="section-content">
-                    <div class="section-content-title">Conversation History</div>
+                    <div class="section-content-title" style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>Conversation History</span>
+                        <button onclick="clearConversationHistory()" style="background: none; border: none; color: #9ca3af; font-size: 13px; cursor: pointer; padding: 4px 8px; border-radius: 4px; transition: color 0.2s;" onmouseover="this.style.color='#6b7280'" onmouseout="this.style.color='#9ca3af'">Clear History</button>
+                    </div>
                     <div class="description-box">
                         <div class="description-scroll-container">
                             <div class="description-text" id="conversationLogText"></div>
@@ -2299,6 +2302,22 @@ Provide exactly 2 sentences summarizing this interaction.`
 
             // Save back to localStorage
             saveConversationSessions(sessions);
+        }
+
+        // Clear all conversation history from localStorage
+        function clearConversationHistory() {
+            if (confirm('Are you sure you want to clear all conversation history? This cannot be undone.')) {
+                // Clear localStorage
+                localStorage.removeItem(CONVERSATION_LOG_KEY);
+
+                // Clear the UI
+                const conversationLogText = document.getElementById('conversationLogText');
+                if (conversationLogText) {
+                    conversationLogText.innerHTML = '';
+                }
+
+                console.log('Conversation history cleared');
+            }
         }
 
         function toggleThinkingBox(event) {
