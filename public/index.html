@@ -1982,11 +1982,15 @@
 
             // Add memory tool instructions
             systemText += '\n\n## MEMORY MANAGEMENT\n\n';
-            systemText += 'You have access to a memory tool that persists information across conversations. You can use it to:\n';
-            systemText += '- Check /memories directory at conversation start to recall previous context\n';
-            systemText += '- Optionally store important information from conversations for future reference\n';
-            systemText += '- Keep session logs in /memories/session_' + new Date().toISOString().split('T')[0] + '.txt if needed\n\n';
-            systemText += 'IMPORTANT: Always provide a complete text response to the user FIRST. Memory operations are optional and secondary to helping the user.';
+            systemText += 'You have access to a memory tool that persists information across conversations.\n\n';
+            systemText += 'CRITICAL RULE: You MUST output your text response to the user BEFORE any tool calls. Your message structure must be:\n';
+            systemText += '1. First: A complete text response answering the user\n';
+            systemText += '2. Then (optional): Memory tool calls if needed\n\n';
+            systemText += 'Never call tools without providing a text response first. The user expects to see your answer immediately.\n\n';
+            systemText += 'Memory usage (optional):\n';
+            systemText += '- Check /memories directory only if relevant to continuing a past conversation\n';
+            systemText += '- Store important information only when necessary\n';
+            systemText += '- Most conversations do not require memory operations';
 
             requestBody.system = [
                 {
