@@ -1786,7 +1786,14 @@
                 </div>
             `;
             chatContent.insertAdjacentHTML('beforeend', messageHtml);
-            scrollToBottom();
+
+            // Scroll so the user message appears at the top, making room for the response
+            const userMessages = chatContent.querySelectorAll('.message-wrapper.user');
+            const lastUserMessage = userMessages[userMessages.length - 1];
+            if (lastUserMessage) {
+                // Use scrollIntoView with alignment to top
+                lastUserMessage.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
 
         async function showThinkingStepsAndCallAPI(userInput) {
