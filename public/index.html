@@ -491,7 +491,7 @@
         .objective-item {
             display: flex;
             align-items: flex-start;
-            gap: 8px;
+            gap: 12px;
             font-size: 13px;
             line-height: 1.5;
             color: #6b7280;
@@ -512,8 +512,17 @@
         }
 
         .objective-label {
-            font-weight: 500;
+            font-weight: 600;
             color: var(--foreground);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .objective-description {
+            font-size: 12px;
+            color: #9ca3af;
+            display: block;
+            line-height: 1.5;
         }
 
         /* Chat Area */
@@ -1769,8 +1778,8 @@
                             <div class="objective-item">
                                 <div class="objective-bullet">${number}</div>
                                 <div>
-                                    <span class="objective-label">${label}:</span>
-                                    <span> ${description}</span>
+                                    <span class="objective-label">${label}</span>
+                                    <span class="objective-description">${description}</span>
                                 </div>
                             </div>
                         `;
