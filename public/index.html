@@ -1697,6 +1697,23 @@
                 console.log('Calling API with conversation history:', conversationHistory.length, 'messages');
                 await callAnthropicAPIStreaming(thinkingWrapper);
                 console.log('API call completed successfully');
+
+                // Generate summary in background (don't await - let it happen async)
+                const lastUserMessage = conversationHistory[conversationHistory.length - 2]?.content;
+                const lastAssistantMessage = conversationHistory[conversationHistory.length - 1]?.content;
+
+                if (lastUserMessage && lastAssistantMessage) {
+                    generateInteractionSummary(lastUserMessage, lastAssistantMessage)
+                        .then(summary => {
+                            if (summary) {
+                                addToConversationLog(summary);
+                                console.log('Interaction logged to conversation history');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error logging interaction:', error);
+                        });
+                }
             } catch (error) {
                 console.error('API Error caught in showThinkingStepsAndCallAPI:', error);
                 console.error('Error stack:', error.stack);
@@ -2072,6 +2089,91 @@
             });
 
             return fullText;
+        }
+
+        // Generate a summary of the interaction using Haiku 4.5
+        async function generateInteractionSummary(userQuery, assistantResponse) {
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-haiku-4-5-20251001',
+                        max_tokens: 150,
+                        messages: [
+                            {
+                                role: 'user',
+                                content: `You are summarizing a conversation interaction. Given the user's query and the LLM's response, create a 2-sentence summary that captures what the user asked and what the LLM responded.
+
+User Query: ${userQuery}
+
+LLM Response: ${assistantResponse}
+
+Provide exactly 2 sentences summarizing this interaction.`
+                            }
+                        ]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate summary');
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let summaryText = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6).trim();
+                            if (data === '[DONE]') continue;
+
+                            try {
+                                const event = JSON.parse(data);
+                                if (event.type === 'content_block_delta' && event.delta?.text) {
+                                    summaryText += event.delta.text;
+                                }
+                            } catch (e) {
+                                // Skip invalid JSON
+                            }
+                        }
+                    }
+                }
+
+                return summaryText.trim();
+            } catch (error) {
+                console.error('Error generating summary:', error);
+                return null;
+            }
+        }
+
+        // Add interaction to conversation log
+        function addToConversationLog(summary) {
+            const conversationLogText = document.getElementById('conversationLogText');
+            if (!conversationLogText) return;
+
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            const dateString = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+            const logEntry = document.createElement('div');
+            logEntry.className = 'description-section';
+            logEntry.style.marginBottom = '12px';
+            logEntry.innerHTML = `
+                <div style="color: #6b7280; font-size: 12px; margin-bottom: 4px;">${timeString} • ${dateString}</div>
+                <div>${summary}</div>
+            `;
+
+            conversationLogText.appendChild(logEntry);
         }
 
         function toggleThinkingBox(event) {
