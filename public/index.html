@@ -1949,10 +1949,6 @@
                         type: "web_search_20250305",
                         name: "web_search",
                         max_uses: 5
-                    },
-                    {
-                        type: "memory_20250818",
-                        name: "memory"
                     }
                 ]
             };
@@ -1979,18 +1975,6 @@
             }
 
             systemText += 'You are Dia, an AI assistant created by Anthropic. You should respond in a conversational, helpful manner using plain text only, as the interface cannot render markdown.';
-
-            // Add memory tool instructions
-            systemText += '\n\n## MEMORY MANAGEMENT\n\n';
-            systemText += 'You have access to a memory tool that persists information across conversations.\n\n';
-            systemText += 'CRITICAL RULE: You MUST output your text response to the user BEFORE any tool calls. Your message structure must be:\n';
-            systemText += '1. First: A complete text response answering the user\n';
-            systemText += '2. Then (optional): Memory tool calls if needed\n\n';
-            systemText += 'Never call tools without providing a text response first. The user expects to see your answer immediately.\n\n';
-            systemText += 'Memory usage (optional):\n';
-            systemText += '- Check /memories directory only if relevant to continuing a past conversation\n';
-            systemText += '- Store important information only when necessary\n';
-            systemText += '- Most conversations do not require memory operations';
 
             requestBody.system = [
                 {
