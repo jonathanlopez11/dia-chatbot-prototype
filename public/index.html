@@ -1906,11 +1906,14 @@
 
             // Call API with streaming
             try {
+                console.log('Calling API with conversation history:', conversationHistory.length, 'messages');
                 await callAnthropicAPIStreaming(thinkingWrapper);
+                console.log('API call completed successfully');
             } catch (error) {
+                console.error('API Error caught in showThinkingStepsAndCallAPI:', error);
+                console.error('Error stack:', error.stack);
                 thinkingWrapper.remove();
                 addAssistantMessageError('Sorry, I encountered an error. Please try again.');
-                console.error('API Error:', error);
             }
         }
 
@@ -1934,6 +1937,8 @@
         }
 
         async function callAnthropicAPIStreaming(thinkingWrapper) {
+            console.log('callAnthropicAPIStreaming started');
+
             // Prepare API request with prompt caching
             const requestBody = {
                 model: 'claude-sonnet-4-5-20250929',
@@ -1952,6 +1957,8 @@
                 ]
             };
 
+            console.log('Request body prepared, messages count:', conversationHistory.length);
+
             // Add extended thinking if enabled
             if (extendedThinkingEnabled) {
                 console.log('Extended thinking is ENABLED');
@@ -1963,32 +1970,34 @@
                 console.log('Extended thinking is DISABLED');
             }
 
-            // Add project context as cached system message
-            // Uses the SAME file (project-context.json) that populates the sidebar
+            // Build system message
+            let systemText = '';
+
+            // Add project context if available
             if (projectContext && projectContext.contextForAI) {
-                // Build system message
-                let systemText = projectContext.contextForAI;
-
-                systemText += '\n\nYou are Dia, an AI assistant created by Anthropic. You should respond in a conversational, helpful manner using plain text only, as the interface cannot render markdown.';
-
-                // Add memory tool instructions
-                systemText += '\n\n## MEMORY MANAGEMENT\n\n';
-                systemText += 'You have access to a memory tool that persists information across conversations. You can use it to:\n';
-                systemText += '- Check /memories directory at conversation start to recall previous context\n';
-                systemText += '- Optionally store important information from conversations for future reference\n';
-                systemText += '- Keep session logs in /memories/session_' + new Date().toISOString().split('T')[0] + '.txt if needed\n\n';
-                systemText += 'IMPORTANT: Always provide a complete text response to the user FIRST. Memory operations are optional and secondary to helping the user.';
-
-                requestBody.system = [
-                    {
-                        type: 'text',
-                        text: systemText + '\n\n## Response Style Guidelines\n\n### General Approach\n- Write in natural paragraphs and prose as your default\n- NEVER use markdown formatting (no **, ##, ###, `, etc.) since it won\'t render\n- Keep responses proportional to the question - simple questions get concise answers, complex questions get thorough exploration\n- Use plain text only - the system cannot display formatted text\n\n### Formatting Rules\n- Never use asterisks for bold or italics - they will display as literal asterisks\n- Never use backticks for code - just write code or technical terms plainly\n- Never use headers with # symbols - they will display as literal # characters\n- Avoid lists in general - write in flowing paragraphs instead\n- Simple dash lists (using "-") are acceptable ONLY when listing short, distinct items where prose would be awkward (like a shopping list, quick options, or brief distinct points)\n- When you do use dash lists, keep each item brief - usually just a few words or one short sentence\n- For explanations, advice, or detailed content, always use prose paragraphs instead of lists\n\n### Tone and Content\n- Be conversational but not overly casual\n- Get straight to the point without unnecessary preambles like "I\'m here to help you with..."\n- Organize thoughts through clear prose rather than visual formatting\n- For technical or work-related queries, maintain professional tone while staying accessible\n\n### When Dash Lists Are Appropriate\nUse simple dash lists only for:\n- Quick enumeration of options or choices\n- Brief, distinct items that don\'t need explanation\n- When the user specifically asks for a list\n- Cases where prose would be genuinely awkward (like listing file names, short menu options, etc.)\n\nNever use lists for:\n- Explanations or advice\n- Multi-sentence points\n- Step-by-step instructions (write these in prose)\n- Organizing different topics or sections\n\n### Example Transformation\nInstead of: "For your next sprint planning, you should prepare: \n- Review Current Sprint Status: Walk through your Linear board...\n- Align on Milestone Progress: Since you\'re in the Espresso milestone..."\n\nWrite: "For your next sprint planning, you\'ll want to walk through your Linear board to understand what\'s shipping and what\'s slipping. This gives you context about blockers and helps avoid overcommitting. Since you\'re in the Espresso milestone, it\'s worth assessing where both workstreams stand against your six-week goals..."\n\nRemember: Write as if you\'re explaining something to a colleague in a plain text email or chat message. Default to prose, and only use dash lists when they genuinely make the information clearer and more scannable for very brief items.\n\n### WEB SEARCH TOOL\nYou have access to a web_search tool. Use it proactively and liberally for:\n- Current events, news, or recent information\n- Real-time data (stock prices, weather, sports scores, etc.)\n- Industry best practices and how other companies approach problems\n- Research topics where external examples would enrich your answer\n- Recent product releases, API documentation, or technology updates\n- Questions about team organization, processes, or methodologies at other companies\n- Any topic where additional research, examples, or data points would provide more comprehensive answers\n- Verifying or supplementing information even if you have some knowledge about it\n\nBe proactive: Even if you know something about a topic, use web search when external research would make your answer more helpful, current, or well-rounded. The user values thorough research over quick responses.\n\nDo NOT use web search for:\n- Questions specifically about the provided project context\n- Simple definitions or explanations you can confidently provide',
-                        cache_control: { type: 'ephemeral' }
-                    }
-                ];
+                systemText = projectContext.contextForAI + '\n\n';
             }
 
+            systemText += 'You are Dia, an AI assistant created by Anthropic. You should respond in a conversational, helpful manner using plain text only, as the interface cannot render markdown.';
+
+            // Add memory tool instructions
+            systemText += '\n\n## MEMORY MANAGEMENT\n\n';
+            systemText += 'You have access to a memory tool that persists information across conversations. You can use it to:\n';
+            systemText += '- Check /memories directory at conversation start to recall previous context\n';
+            systemText += '- Optionally store important information from conversations for future reference\n';
+            systemText += '- Keep session logs in /memories/session_' + new Date().toISOString().split('T')[0] + '.txt if needed\n\n';
+            systemText += 'IMPORTANT: Always provide a complete text response to the user FIRST. Memory operations are optional and secondary to helping the user.';
+
+            requestBody.system = [
+                {
+                    type: 'text',
+                    text: systemText + '\n\n## Response Style Guidelines\n\n### General Approach\n- Write in natural paragraphs and prose as your default\n- NEVER use markdown formatting (no **, ##, ###, `, etc.) since it won\'t render\n- Keep responses proportional to the question - simple questions get concise answers, complex questions get thorough exploration\n- Use plain text only - the system cannot display formatted text\n\n### Formatting Rules\n- Never use asterisks for bold or italics - they will display as literal asterisks\n- Never use backticks for code - just write code or technical terms plainly\n- Never use headers with # symbols - they will display as literal # characters\n- Avoid lists in general - write in flowing paragraphs instead\n- Simple dash lists (using "-") are acceptable ONLY when listing short, distinct items where prose would be awkward (like a shopping list, quick options, or brief distinct points)\n- When you do use dash lists, keep each item brief - usually just a few words or one short sentence\n- For explanations, advice, or detailed content, always use prose paragraphs instead of lists\n\n### Tone and Content\n- Be conversational but not overly casual\n- Get straight to the point without unnecessary preambles like "I\'m here to help you with..."\n- Organize thoughts through clear prose rather than visual formatting\n- For technical or work-related queries, maintain professional tone while staying accessible\n\n### When Dash Lists Are Appropriate\nUse simple dash lists only for:\n- Quick enumeration of options or choices\n- Brief, distinct items that don\'t need explanation\n- When the user specifically asks for a list\n- Cases where prose would be genuinely awkward (like listing file names, short menu options, etc.)\n\nNever use lists for:\n- Explanations or advice\n- Multi-sentence points\n- Step-by-step instructions (write these in prose)\n- Organizing different topics or sections\n\n### Example Transformation\nInstead of: "For your next sprint planning, you should prepare: \n- Review Current Sprint Status: Walk through your Linear board...\n- Align on Milestone Progress: Since you\'re in the Espresso milestone..."\n\nWrite: "For your next sprint planning, you\'ll want to walk through your Linear board to understand what\'s shipping and what\'s slipping. This gives you context about blockers and helps avoid overcommitting. Since you\'re in the Espresso milestone, it\'s worth assessing where both workstreams stand against your six-week goals..."\n\nRemember: Write as if you\'re explaining something to a colleague in a plain text email or chat message. Default to prose, and only use dash lists when they genuinely make the information clearer and more scannable for very brief items.\n\n### WEB SEARCH TOOL\nYou have access to a web_search tool. Use it proactively and liberally for:\n- Current events, news, or recent information\n- Real-time data (stock prices, weather, sports scores, etc.)\n- Industry best practices and how other companies approach problems\n- Research topics where external examples would enrich your answer\n- Recent product releases, API documentation, or technology updates\n- Questions about team organization, processes, or methodologies at other companies\n- Any topic where additional research, examples, or data points would provide more comprehensive answers\n- Verifying or supplementing information even if you have some knowledge about it\n\nBe proactive: Even if you know something about a topic, use web search when external research would make your answer more helpful, current, or well-rounded. The user values thorough research over quick responses.\n\nDo NOT use web search for:\n- Questions specifically about the provided project context\n- Simple definitions or explanations you can confidently provide',
+                    cache_control: { type: 'ephemeral' }
+                }
+            ];
+
             // Call API endpoint with streaming
+            console.log('Fetching from /api/chat...');
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
@@ -1997,9 +2006,15 @@
                 body: JSON.stringify(requestBody)
             });
 
+            console.log('Fetch completed, response status:', response.status, response.ok);
+
             if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
+                const errorText = await response.text();
+                console.error('API error response:', errorText);
+                throw new Error(`API error: ${response.status} - ${errorText}`);
             }
+
+            console.log('Response OK, starting to read stream...');
 
             // Add message bubble to the existing thinking wrapper
             const uniqueId = 'streaming-' + Date.now();
@@ -2441,7 +2456,7 @@
                     },
                     body: JSON.stringify({
                         conversationHistory: conversationHistory,
-                        projectContext: projectContext.contextForAI
+                        projectContext: projectContext?.contextForAI || ''
                     })
                 });
 
