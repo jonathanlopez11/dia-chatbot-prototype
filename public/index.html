@@ -481,10 +481,10 @@
         .objectives-list {
             background: white;
             border-radius: var(--radius);
-            padding: 12px;
+            padding: 16px 12px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
@@ -495,31 +495,38 @@
             font-size: 13px;
             line-height: 1.5;
             color: #6b7280;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
         }
 
         .objective-bullet {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             background: var(--primary);
             border-radius: 50%;
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: white;
         }
 
         .objective-label {
-            font-weight: 600;
-            color: var(--foreground);
+            font-weight: 400;
+            color: #000000;
             display: block;
             margin-bottom: 2px;
+            font-size: 13px;
         }
 
         .objective-description {
-            font-size: 12px;
+            font-size: 11px;
             color: #9ca3af;
             display: block;
             line-height: 1.5;
