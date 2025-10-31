@@ -1484,12 +1484,31 @@
                     </svg>
                 </div>
                 <div class="message-content-wrapper">
-                    <div class="message-bubble assistant">Hi, I'm Dia and I'm here to help you discuss or brainstorm your project on Apps Pod: Espresso Milestone. Ask me anything about the project or any research you'd like me to do!</div>
+                    <div class="message-bubble assistant"></div>
                 </div>
             `;
             chatContent.appendChild(greetingWrapper);
 
-            // Call the API to generate the continuation (history reference if exists)
+            const messageBubble = greetingWrapper.querySelector('.message-bubble');
+            const hardcodedIntro = "Hi, I'm Dia and I'm here to help you discuss or brainstorm your project on Apps Pod: Espresso Milestone. Ask me anything about the project or any research you'd like me to do!";
+
+            // Fake-stream the hardcoded intro text
+            await new Promise(resolve => {
+                let i = 0;
+                const interval = setInterval(() => {
+                    if (i < hardcodedIntro.length) {
+                        messageBubble.textContent = hardcodedIntro.substring(0, i + 1);
+                        i += Math.ceil(Math.random() * 3 + 2); // Random speed for natural effect
+                        scrollToBottom();
+                    } else {
+                        messageBubble.textContent = hardcodedIntro;
+                        clearInterval(interval);
+                        resolve();
+                    }
+                }, 20); // 20ms interval
+            });
+
+            // After fake streaming finishes, call API to generate continuation
             await callAnthropicAPIStreaming(greetingWrapper);
 
             // After generating, set flag to false
@@ -1995,8 +2014,8 @@
             let assistantContent = [];  // Track full assistant message content blocks
             let stopReason = null;  // Track why the message stopped
 
-            // For initial greeting, store the intro text to prepend
-            const introText = isInitialGreeting ? streamingTextElement.textContent : '';
+            // For initial greeting, store the intro text to prepend (with line breaks)
+            const introText = isInitialGreeting ? streamingTextElement.textContent + '\n\n' : '';
 
             // Create a container for thinking/tool blocks that appears before the text
             const blocksContainerId = 'blocks-' + Date.now();
