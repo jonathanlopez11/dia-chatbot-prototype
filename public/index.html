@@ -1928,7 +1928,7 @@
 
             // Add conditional prompt for initial greeting
             if (isInitialGreeting) {
-                systemText += '\n\nIMPORTANT: This is the very first message when the user opens the chat. Greet the user warmly and introduce yourself as Dia. Say something like "Hello! I\'m here to help you with the Apps Pod: Espresso Milestone. Ask me anything about the project!" Then add a line break and if there is conversation history above, add one concise sentence (max 40 characters) about what you talked about last time in the format: "Last time: [brief topic]." Then add another line break and ask "Would you like to pick up where we left off or discuss something else?" Keep the topic reference very brief and truncate at word boundaries if needed.';
+                systemText += '\n\nIMPORTANT: This is the very first message when the user opens the chat. Output exactly this greeting:\n\n"Hi, I\'m Dia and I\'m here to help you discuss or brainstorm your project on Apps Pod: Espresso Milestone. Ask me anything about the project or any research you\'d like me to do!"\n\nThen add a line break. If there is conversation history in the context above, add one casual sentence about what was talked about last time. Make it sound natural like "Last time we talked about [brief topic]" - keep it very brief (max 40 characters for the topic) and truncate at word boundaries if needed. Then add another line break and ask "Would you like to pick up where we left off or discuss something else?"';
             }
 
             requestBody.system = [
