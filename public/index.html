@@ -1185,11 +1185,15 @@
         <div class="section">
             <div class="section-content">
                 <div class="section-content-title">Project Overview</div>
-                <div class="description-box">
-                    <div class="description-scroll-container">
-                        <div class="description-text" id="descriptionText"></div>
-                    </div>
+                <div style="font-size: 13px; line-height: 1.5; color: #374151; margin-bottom: 12px;">
+                    Apps Pod builds Dia's app ecosystem infrastructure—APIs, permissions, context-sharing—while making apps discoverable through two workstreams:<br><br>
+                    1. Meeting Support: automated prep/notes/follow-up across calendar-integrated meeting lifecycle<br>
+                    2. Proactive Suggestions: AI-driven contextual app recommendations based on user workflow signals<br><br>
+                    Goal: seamlessly integrate apps into browser workflows so users access the right tools at the right moments without manual invocation.
                 </div>
+                <button onclick="showFullProjectInfo()" style="background: none; border: 1px solid #d1d5db; color: #6b7280; font-size: 12px; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: all 0.2s;">
+                    See all project information
+                </button>
             </div>
         </div>
 
@@ -1611,6 +1615,46 @@
             const card = document.getElementById('expandedCard');
             if (overlay) overlay.remove();
             if (card) card.remove();
+        }
+
+        function showFullProjectInfo() {
+            if (!projectContext) return;
+
+            // Create overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'expanded-card-overlay';
+            overlay.onclick = closeFullProjectInfo;
+
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'expanded-card';
+            modal.id = 'fullProjectModal';
+            modal.style.display = 'block';
+            modal.style.maxWidth = '700px';
+            modal.style.maxHeight = '80vh';
+            modal.style.overflow = 'auto';
+
+            modal.innerHTML = `
+                <div style="padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="margin: 0; font-size: 18px; font-weight: 600;">Full Project Information</h2>
+                        <button onclick="closeFullProjectInfo()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280;">&times;</button>
+                    </div>
+                    <div style="font-size: 14px; line-height: 1.6; color: #374151;">
+                        ${projectContext.description || ''}
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(overlay);
+            document.body.appendChild(modal);
+        }
+
+        function closeFullProjectInfo() {
+            const overlay = document.querySelector('.expanded-card-overlay');
+            const modal = document.getElementById('fullProjectModal');
+            if (overlay) overlay.remove();
+            if (modal) modal.remove();
         }
 
         function checkScrollableContent() {
