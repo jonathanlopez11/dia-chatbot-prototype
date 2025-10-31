@@ -498,12 +498,17 @@
         }
 
         .objective-bullet {
-            width: 6px;
-            height: 6px;
+            width: 24px;
+            height: 24px;
             background: var(--primary);
             border-radius: 50%;
-            margin-top: 6px;
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
         }
 
         .objective-label {
@@ -1753,7 +1758,8 @@
             // Update key objectives
             const objectivesList = document.querySelector('.objectives-list');
             if (objectivesList && context.keyObjectives && context.keyObjectives.length > 0) {
-                objectivesList.innerHTML = context.keyObjectives.map(obj => {
+                objectivesList.innerHTML = context.keyObjectives.map((obj, index) => {
+                    const number = index + 1;
                     // Split on first colon to separate label from description
                     const colonIndex = obj.indexOf(':');
                     if (colonIndex !== -1) {
@@ -1761,7 +1767,7 @@
                         const description = obj.substring(colonIndex + 1).trim();
                         return `
                             <div class="objective-item">
-                                <div class="objective-bullet"></div>
+                                <div class="objective-bullet">${number}</div>
                                 <div>
                                     <span class="objective-label">${label}:</span>
                                     <span> ${description}</span>
@@ -1771,7 +1777,7 @@
                     } else {
                         return `
                             <div class="objective-item">
-                                <div class="objective-bullet"></div>
+                                <div class="objective-bullet">${number}</div>
                                 <div>${obj}</div>
                             </div>
                         `;
