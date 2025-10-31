@@ -1369,6 +1369,76 @@
         const sessionId = 'session-' + Date.now();
         const sessionStartTime = new Date();
 
+        // LocalStorage key for conversation sessions
+        const CONVERSATION_LOG_KEY = 'conversation_log_sessions';
+
+        // Load sessions from localStorage
+        function loadConversationSessions() {
+            try {
+                const stored = localStorage.getItem(CONVERSATION_LOG_KEY);
+                return stored ? JSON.parse(stored) : {};
+            } catch (error) {
+                console.error('Error loading conversation sessions:', error);
+                return {};
+            }
+        }
+
+        // Save sessions to localStorage
+        function saveConversationSessions(sessions) {
+            try {
+                localStorage.setItem(CONVERSATION_LOG_KEY, JSON.stringify(sessions));
+            } catch (error) {
+                console.error('Error saving conversation sessions:', error);
+            }
+        }
+
+        // Load and display all past sessions
+        function displayPastSessions() {
+            const conversationLogText = document.getElementById('conversationLogText');
+            if (!conversationLogText) return;
+
+            const sessions = loadConversationSessions();
+
+            // Sort sessions by start time (newest first)
+            const sortedSessionIds = Object.keys(sessions).sort((a, b) => {
+                return new Date(sessions[b].startTime) - new Date(sessions[a].startTime);
+            });
+
+            // Display each session
+            sortedSessionIds.forEach(sessionId => {
+                const sessionData = sessions[sessionId];
+                const startTime = new Date(sessionData.startTime);
+                const sessionTimeString = startTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                const sessionDateString = startTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+                const sessionBox = document.createElement('div');
+                sessionBox.id = sessionId;
+                sessionBox.className = 'description-section';
+                sessionBox.style.marginBottom = '16px';
+                sessionBox.style.padding = '12px';
+                sessionBox.style.background = '#f9fafb';
+                sessionBox.style.borderRadius = '8px';
+                sessionBox.style.border = '1px solid #e5e7eb';
+
+                // Build entries HTML
+                const entriesHtml = sessionData.entries.map(entry => `
+                    <div style="margin-bottom: 10px;">
+                        <div style="color: #6b7280; font-size: 11px; margin-bottom: 3px;">${entry.time}</div>
+                        <div style="font-size: 13px; color: #374151;">${entry.summary}</div>
+                    </div>
+                `).join('');
+
+                sessionBox.innerHTML = `
+                    <div style="color: #6b7280; font-weight: 500; font-size: 13px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb;">
+                        Session: ${sessionDateString} at ${sessionTimeString}
+                    </div>
+                    <div class="session-entries">${entriesHtml}</div>
+                `;
+
+                conversationLogText.appendChild(sessionBox);
+            });
+        }
+
         // Load project context - THIS FILE controls both the sidebar AND AI context
         fetch('/project-context.json')
             .then(response => response.json())
@@ -1379,6 +1449,9 @@
                 // Don't generate suggestions on initial load - use hardcoded ones
             })
             .catch(error => console.error('Error loading project context:', error));
+
+        // Load past conversation sessions on page load
+        displayPastSessions();
 
         let expandedCardTimeout;
 
@@ -2206,6 +2279,26 @@ Provide exactly 2 sentences summarizing this interaction.`
             `;
 
             sessionEntries.appendChild(logEntry);
+
+            // Save to localStorage
+            const sessions = loadConversationSessions();
+
+            // Ensure current session exists in storage
+            if (!sessions[sessionId]) {
+                sessions[sessionId] = {
+                    startTime: sessionStartTime.toISOString(),
+                    entries: []
+                };
+            }
+
+            // Add the new entry
+            sessions[sessionId].entries.push({
+                time: timeString,
+                summary: summary
+            });
+
+            // Save back to localStorage
+            saveConversationSessions(sessions);
         }
 
         function toggleThinkingBox(event) {
