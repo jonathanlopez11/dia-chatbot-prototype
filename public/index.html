@@ -1507,7 +1507,7 @@
                 const interval = setInterval(() => {
                     if (i < hardcodedIntro.length) {
                         messageBubble.textContent = hardcodedIntro.substring(0, i + 1);
-                        i += Math.ceil(Math.random() * 3 + 2); // Random speed for natural effect
+                        i += Math.ceil(Math.random() * 2 + 1); // 1-2 characters per update
                         scrollToBottom();
                     } else {
                         messageBubble.textContent = hardcodedIntro;
@@ -1515,7 +1515,7 @@
                         resolveFakeStreaming(); // Signal that fake streaming is done
                         resolve();
                     }
-                }, 20); // 20ms interval
+                }, 30); // 30ms interval for slower streaming
             });
 
             // Wait for API call to complete
