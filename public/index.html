@@ -1176,7 +1176,6 @@
         <!-- Tabs -->
         <div class="sidebar-tabs">
             <button class="sidebar-tab active" onclick="switchTab(event, 'project')">Project</button>
-            <button class="sidebar-tab" onclick="switchTab(event, 'memory')">User Memory</button>
             <button class="sidebar-tab" onclick="switchTab(event, 'conversation')">Conversation Log</button>
         </div>
 
@@ -1224,31 +1223,6 @@
                 </div>
             </div>
         </div>
-        </div>
-
-        <!-- User Memory Tab Content -->
-        <div id="memory-tab" class="tab-content">
-            <div class="section">
-                <div class="section-content">
-                    <div class="section-content-title">User Profile</div>
-                    <div class="description-box">
-                        <div class="description-scroll-container">
-                            <div class="description-text" id="userProfileText"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section">
-                <div class="section-content">
-                    <div class="section-content-title">Company Overview</div>
-                    <div class="description-box">
-                        <div class="description-scroll-container">
-                            <div class="description-text" id="companyOverviewText"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Conversation Log Tab Content -->
@@ -1366,169 +1340,6 @@
         let conversationHistory = [];
         let projectContext = null;
         let extendedThinkingEnabled = false;
-
-        // ==============================================================================
-        // MEMORY TOOL IMPLEMENTATION
-        // Claude's Memory Tool - Client-side file storage backend
-        // ==============================================================================
-
-        const MEMORY_STORAGE_KEY = 'claude_memories';
-
-        // Initialize memory storage
-        function initMemoryStorage() {
-            if (!localStorage.getItem(MEMORY_STORAGE_KEY)) {
-                localStorage.setItem(MEMORY_STORAGE_KEY, JSON.stringify({}));
-            }
-        }
-
-        // Load all memory files
-        function loadMemories() {
-            try {
-                const stored = localStorage.getItem(MEMORY_STORAGE_KEY);
-                return stored ? JSON.parse(stored) : {};
-            } catch (error) {
-                console.error('Error loading memories:', error);
-                return {};
-            }
-        }
-
-        // Save memory files
-        function saveMemories(memories) {
-            try {
-                localStorage.setItem(MEMORY_STORAGE_KEY, JSON.stringify(memories));
-            } catch (error) {
-                console.error('Error saving memories:', error);
-                if (error.name === 'QuotaExceededError') {
-                    throw new Error('Storage quota exceeded');
-                }
-            }
-        }
-
-        // Validate path security - prevent directory traversal
-        function validateMemoryPath(path) {
-            if (!path.startsWith('/memories/')) {
-                throw new Error('Invalid path: must be within /memories directory');
-            }
-            if (path.includes('../') || path.includes('..\\') || path.includes('%2e%2e')) {
-                throw new Error('Invalid path: directory traversal not allowed');
-            }
-            return path;
-        }
-
-        // Handle memory tool operations
-        async function handleMemoryOperation(operation, input) {
-            try {
-                // Block read operations - only allow writes
-                if (operation === 'view') {
-                    return {
-                        error: 'Read operations not allowed. You can only write to memory (create, str_replace, insert).'
-                    };
-                }
-
-                initMemoryStorage();
-                const memories = loadMemories();
-
-                switch (operation) {
-                    case 'view': {
-                        const path = validateMemoryPath(input.path);
-
-                        // If path is /memories, list all files
-                        if (path === '/memories' || path === '/memories/') {
-                            const files = Object.keys(memories);
-                            if (files.length === 0) {
-                                return { content: 'Directory is empty\n' };
-                            }
-                            return { content: files.map(f => f.replace('/memories/', '')).join('\n') + '\n' };
-                        }
-
-                        // View specific file
-                        const content = memories[path];
-                        if (content === undefined) {
-                            throw new Error(`File not found: ${path}`);
-                        }
-
-                        // Handle line range if specified
-                        if (input.start_line !== undefined || input.end_line !== undefined) {
-                            const lines = content.split('\n');
-                            const start = (input.start_line || 1) - 1;
-                            const end = input.end_line || lines.length;
-                            return { content: lines.slice(start, end).join('\n') + '\n' };
-                        }
-
-                        return { content: content };
-                    }
-
-                    case 'create': {
-                        const path = validateMemoryPath(input.path);
-                        memories[path] = input.content;
-                        saveMemories(memories);
-                        return { success: true, message: `Created file: ${path}` };
-                    }
-
-                    case 'str_replace': {
-                        const path = validateMemoryPath(input.path);
-                        if (memories[path] === undefined) {
-                            throw new Error(`File not found: ${path}`);
-                        }
-
-                        const oldContent = memories[path];
-                        if (!oldContent.includes(input.old_str)) {
-                            throw new Error('old_str not found in file');
-                        }
-
-                        memories[path] = oldContent.replace(input.old_str, input.new_str);
-                        saveMemories(memories);
-                        return { success: true, message: `Updated file: ${path}` };
-                    }
-
-                    case 'insert': {
-                        const path = validateMemoryPath(input.path);
-                        if (memories[path] === undefined) {
-                            throw new Error(`File not found: ${path}`);
-                        }
-
-                        const lines = memories[path].split('\n');
-                        const insertAt = input.insert_line - 1;
-                        lines.splice(insertAt, 0, input.content);
-                        memories[path] = lines.join('\n');
-                        saveMemories(memories);
-                        return { success: true, message: `Inserted content at line ${input.insert_line}` };
-                    }
-
-                    case 'delete': {
-                        const path = validateMemoryPath(input.path);
-                        if (memories[path] === undefined) {
-                            throw new Error(`File not found: ${path}`);
-                        }
-
-                        delete memories[path];
-                        saveMemories(memories);
-                        return { success: true, message: `Deleted file: ${path}` };
-                    }
-
-                    case 'rename': {
-                        const oldPath = validateMemoryPath(input.old_path);
-                        const newPath = validateMemoryPath(input.new_path);
-
-                        if (memories[oldPath] === undefined) {
-                            throw new Error(`File not found: ${oldPath}`);
-                        }
-
-                        memories[newPath] = memories[oldPath];
-                        delete memories[oldPath];
-                        saveMemories(memories);
-                        return { success: true, message: `Renamed ${oldPath} to ${newPath}` };
-                    }
-
-                    default:
-                        throw new Error(`Unknown memory operation: ${operation}`);
-                }
-            } catch (error) {
-                console.error('Memory operation error:', error);
-                return { error: error.message };
-            }
-        }
-
 
         // Load project context - THIS FILE controls both the sidebar AND AI context
         fetch('/project-context.json')
@@ -1738,21 +1549,6 @@
             // Setup see more functionality after content is loaded
             setupSeeMore();
 
-            // Populate User Memory tab
-            if (context.userMemory) {
-                // User Profile
-                const userProfileText = document.getElementById('userProfileText');
-                if (userProfileText && context.userMemory.userProfile) {
-                    userProfileText.innerHTML = `<div class="description-section"><div>${context.userMemory.userProfile}</div></div>`;
-                }
-
-                // Company Overview
-                const companyOverviewText = document.getElementById('companyOverviewText');
-                if (companyOverviewText && context.userMemory.companyOverview) {
-                    companyOverviewText.innerHTML = `<div class="description-section"><div>${context.userMemory.companyOverview}</div></div>`;
-                }
-            }
-
             // Check for scrollable content globally after all content is loaded
             setTimeout(checkScrollableContent, 100);
         }
@@ -1763,57 +1559,6 @@
 
             sidebar.classList.toggle('hidden');
             openBtn.classList.toggle('visible');
-        }
-
-        function updateConversationLogUI() {
-            const conversationLogText = document.getElementById('conversationLogText');
-            if (!conversationLogText) return;
-
-            // Load memory files from storage
-            const memories = loadMemories();
-            const sessionFiles = Object.keys(memories).filter(path => path.startsWith('/memories/session_'));
-
-            if (sessionFiles.length === 0) {
-                conversationLogText.innerHTML = '<p style="color: #9ca3af; font-size: 13px;">No conversation memory yet. As you chat, Claude will automatically save summaries here.</p>';
-                return;
-            }
-
-            // Sort by filename (which contains date) - newest first
-            sessionFiles.sort().reverse();
-
-            // Build session cards HTML
-            const sessionsHTML = sessionFiles.map(filePath => {
-                const filename = filePath.replace('/memories/session_', '').replace('.txt', '');
-                const content = memories[filePath];
-                const lines = content.split('\n').filter(line => line.trim());
-                const exchangeCount = lines.length;
-
-                // Parse date from filename (format: YYYY-MM-DD)
-                const dateStr = filename;
-                let displayDate = dateStr;
-                try {
-                    const date = new Date(dateStr);
-                    displayDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                } catch (e) {
-                    // Keep original if parsing fails
-                }
-
-                // Show first 2 summaries as preview
-                const preview = lines.slice(0, 2).join(' | ');
-                const previewText = preview.length > 150 ? preview.substring(0, 150) + '...' : preview;
-
-                return `
-                    <div class="session-card">
-                        <div class="session-header">
-                            <div class="session-date">${displayDate}</div>
-                            <div class="session-meta">${exchangeCount} exchange${exchangeCount !== 1 ? 's' : ''}</div>
-                        </div>
-                        <div class="session-summary">${previewText || 'Session in progress...'}</div>
-                    </div>
-                `;
-            }).join('');
-
-            conversationLogText.innerHTML = sessionsHTML;
         }
 
         function handleKeyPress(event) {
@@ -1956,10 +1701,6 @@
                         type: "web_search_20250305",
                         name: "web_search",
                         max_uses: 5
-                    },
-                    {
-                        type: "memory_20250818",
-                        name: "memory"
                     }
                 ]
             };
@@ -1986,19 +1727,6 @@
             }
 
             systemText += 'You are Dia, an AI assistant created by Anthropic. You should respond in a conversational, helpful manner using plain text only, as the interface cannot render markdown.';
-
-            // Add memory tool instructions - WRITE ONLY
-            systemText += '\n\n## MEMORY (WRITE-ONLY)\n\n';
-            systemText += 'CRITICAL RULES:\n';
-            systemText += '1. You MUST provide your complete text response FIRST, then optionally use memory\n';
-            systemText += '2. You can ONLY WRITE to memory - NEVER read/view\n';
-            systemText += '3. Only use these commands: create, str_replace, insert\n';
-            systemText += '4. NEVER use the "view" command - it will fail\n\n';
-            systemText += 'When to write to memory:\n';
-            systemText += '- After significant conversations where the user shared important context\n';
-            systemText += '- Store user preferences, project details, or important decisions\n';
-            systemText += '- Use /memories/context.txt for general user context\n';
-            systemText += '- Keep entries concise and factual';
 
             requestBody.system = [
                 {
@@ -2052,7 +1780,6 @@
             let isThinkingBlock = false;
             let currentToolUseId = null;
             let toolInputJson = {};
-            let pendingMemoryTools = [];  // Track memory tool uses
             let assistantContent = [];  // Track full assistant message content blocks
             let stopReason = null;  // Track why the message stopped
 
@@ -2146,38 +1873,6 @@
                                 } else if (event.content_block?.type === 'text') {
                                     isThinkingBlock = false;
                                     console.log('Started text block');
-                                } else if (event.content_block?.type === 'tool_use') {
-                                    // Client-side tool use (memory tool)
-                                    console.log('Client tool use started:', event.content_block.name, 'ID:', event.content_block.id);
-                                    currentToolUseId = event.content_block.id;
-
-                                    // Track memory tool uses for later execution
-                                    if (event.content_block.name === 'memory') {
-                                        const toolUse = {
-                                            id: event.content_block.id,
-                                            type: 'tool_use',
-                                            name: 'memory',
-                                            input: {}
-                                        };
-                                        pendingMemoryTools.push(toolUse);
-                                        toolInputJson[event.index] = '';
-
-                                        // Show UI indicator
-                                        const toolBoxHtml = `
-                                            <div class="thinking-box" id="memory-${toolUse.id}">
-                                                <div class="thinking-box-header" onclick="toggleThinkingBox(event)">
-                                                    <div class="thinking-box-title">
-                                                        <span>💾 Writing to memory...</span>
-                                                    </div>
-                                                    <div class="thinking-box-meta">
-                                                        <span class="thinking-box-toggle">▼</span>
-                                                    </div>
-                                                </div>
-                                                <div class="thinking-box-content collapsed" id="memory-${toolUse.id}-content"></div>
-                                            </div>
-                                        `;
-                                        blocksContainer.insertAdjacentHTML('beforeend', toolBoxHtml);
-                                    }
                                 } else if (event.content_block?.type === 'server_tool_use') {
                                     console.log('Server tool use started:', event.content_block.name, 'ID:', event.content_block.id);
                                     console.log('Full content_block:', JSON.stringify(event.content_block, null, 2));
@@ -2301,11 +1996,6 @@
                                                 }
                                             }
                                         }
-
-                                        // Store input for memory tools
-                                        if (pendingMemoryTools.length > 0 && event.index < pendingMemoryTools.length) {
-                                            pendingMemoryTools[event.index].input = input;
-                                        }
                                     } catch (e) {
                                         // JSON not complete yet, wait for more chunks
                                     }
@@ -2337,86 +2027,6 @@
             if (thinkingElement && thinkingText) {
                 thinkingDisplayText = thinkingText;
                 thinkingElement.textContent = thinkingText;
-            }
-
-            // Handle memory tool execution if stop_reason is tool_use
-            if (stopReason === 'tool_use' && pendingMemoryTools.length > 0) {
-                console.log('Executing memory tools:', pendingMemoryTools);
-
-                // Build assistant message content with tool_use blocks
-                const assistantMessage = {
-                    role: 'assistant',
-                    content: []
-                };
-
-                // Add text content if any
-                if (fullText) {
-                    assistantMessage.content.push({
-                        type: 'text',
-                        text: fullText
-                    });
-                }
-
-                // Add tool_use blocks
-                pendingMemoryTools.forEach(tool => {
-                    assistantMessage.content.push({
-                        type: 'tool_use',
-                        id: tool.id,
-                        name: 'memory',
-                        input: tool.input
-                    });
-                });
-
-                // Add assistant message to history
-                conversationHistory.push(assistantMessage);
-
-                // Execute memory operations and build tool_result messages
-                const toolResults = [];
-                for (const tool of pendingMemoryTools) {
-                    try {
-                        console.log('Executing memory operation:', tool.input.command, tool.input);
-                        const result = await handleMemoryOperation(tool.input.command, tool.input);
-                        console.log('Memory operation result:', result);
-
-                        // Update UI to show success
-                        const memoryBox = document.getElementById(`memory-${tool.id}`);
-                        if (memoryBox) {
-                            const titleSpan = memoryBox.querySelector('.thinking-box-title span');
-                            if (titleSpan) {
-                                titleSpan.textContent = `💾 Memory updated: ${tool.input.path || 'operation completed'}`;
-                            }
-                            const contentEl = document.getElementById(`memory-${tool.id}-content`);
-                            if (contentEl) {
-                                contentEl.textContent = JSON.stringify(result, null, 2);
-                            }
-                        }
-
-                        toolResults.push({
-                            type: 'tool_result',
-                            tool_use_id: tool.id,
-                            content: result.content || JSON.stringify(result)
-                        });
-                    } catch (error) {
-                        console.error('Memory operation failed:', error);
-                        toolResults.push({
-                            type: 'tool_result',
-                            tool_use_id: tool.id,
-                            is_error: true,
-                            content: error.message
-                        });
-                    }
-                }
-
-                // Add tool_result as user message
-                conversationHistory.push({
-                    role: 'user',
-                    content: toolResults
-                });
-
-                // Continue conversation with tool results - recursive call
-                console.log('Continuing conversation with tool results');
-                await callAnthropicAPIStreaming(thinkingWrapper);
-                return;
             }
 
             // Normal completion - add assistant response to conversation history
