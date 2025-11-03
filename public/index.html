@@ -1388,6 +1388,7 @@
         let hasUserSentMessage = false;
         let conversationHistory = [];
         let projectContext = null;
+        let linearDocument = null; // Store Linear board tickets
         let extendedThinkingEnabled = false;
         let isInitialGreeting = true; // Flag to track if this is the first greeting on page load
 
@@ -1568,6 +1569,15 @@
                 generateInitialGreeting();
             })
             .catch(error => console.error('Error loading project context:', error));
+
+        // Load Linear board tickets document
+        fetch('/linear-apps-pod.md')
+            .then(response => response.text())
+            .then(data => {
+                linearDocument = data;
+                console.log('Linear document loaded');
+            })
+            .catch(error => console.error('Error loading Linear document:', error));
 
         // Load past conversation sessions on page load
         displayPastSessions();
@@ -2032,6 +2042,11 @@
             // Add project context if available
             if (projectContext && projectContext.contextForAI) {
                 systemText = projectContext.contextForAI + '\n\n';
+            }
+
+            // Add Linear board tickets if available
+            if (linearDocument) {
+                systemText += '## Linear Board - Current Tickets\n\n' + linearDocument + '\n\n';
             }
 
             systemText += 'You are Dia, an AI assistant created by The Browser Company. You should respond in a conversational, helpful manner using plain text only, as the interface cannot render markdown.';
